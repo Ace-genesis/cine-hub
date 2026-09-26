@@ -1,0 +1,53 @@
+:root {
+  --accent-color: #e50914;
+  --background: #0f0f0f;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  background-color: black;
+}
+
+.primary-btn {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+}
+
+.primary-btn.loading,
+.secondary-btn.loading {
+  border: 2px solid rgba(245, 245, 245, 0.37);
+  border-radius: 5px;
+}
+
+.secondary-btn {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.308);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.secondary-btn:hover {
+  background: rgba(50, 50, 50, 0.75);
+}

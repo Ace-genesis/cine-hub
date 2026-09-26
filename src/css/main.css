@@ -1,0 +1,40 @@
+.popular-movies-section {
+  padding: 1rem;
+}
+
+.popular-movies {
+  display: flex;
+  gap: 0.3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.popular-movies::-webkit-scrollbar {
+  display: none;
+}
+
+.movie-card {
+  flex-shrink: 0;
+  border-radius: 5px;
+  width: 100px;
+}
+
+.movie-card.loading {
+  border: 2px solid rgba(245, 245, 245, 0.37);
+  border-radius: 5px;
+  height: 100px;
+  padding: 1rem;
+}
+
+.card-image {
+  width: 100%;
+  border-radius: 5px;
+}
+.card-title {
+  color: white;
+}
+
+.section-title {
+  color: white;
+  font-size: 1rem;
+}
