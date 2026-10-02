@@ -1,9 +1,9 @@
 .hero {
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center top;
-  height: clamp(240px, 40vw, 370px);
+  background-position: center;
   position: relative;
+  min-height: 20dvh;
 }
 
 .hero.skeleton {
@@ -55,7 +55,7 @@
 }
 
 .hero-title {
-  font-size: clamp(1.2rem, 4vw, 2rem);
+  font-size: clamp(1rem, 4vw, 1.5rem);
 }
 
 .hero-title.loading {
@@ -70,7 +70,8 @@
 
 .movie-info {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
   font-size: clamp(0.5rem, 2vw, 0.8rem);
 }
 
@@ -82,6 +83,8 @@
 
 .movie-overview {
   font-size: clamp(0.5rem, 2vw, 0.8rem);
+  line-height: 1.5;
+  overflow-wrap: break-word;
 }
 
 .movie-overview.loading {
@@ -92,6 +95,7 @@
 
 .movie-genre {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -107,8 +111,9 @@
 
 .cta {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
-  margin-top: 15px;
+  margin-top: clamp(3px, 2vw, 5px);
 }
 
 .loading {

@@ -1,6 +1,4 @@
 import { Link } from "react-router-dom";
-import "../css/header.css";
-import "../css/responsive.css";
 
 function Hamburger() {
   return (
@@ -15,17 +13,17 @@ function Hamburger() {
 function Header() {
   return (
     <header className="primary-header">
-      <Link className="site-name">
+      <Link to={"/"} className="site-name">
         <h1>
           Cine<span className="name-span">Hub</span>
         </h1>
       </Link>
 
       <nav className="primary-nav">
-        <Link to={"#"} className="nav-item">
+        <Link to={"/"} className="nav-item">
           Home
         </Link>
-        <Link to={"#"} className="nav-item">
+        <Link to={"/movies"} className="nav-item">
           Movies
         </Link>
         <Link to={"#"} className="nav-item">

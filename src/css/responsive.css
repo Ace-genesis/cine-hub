@@ -38,4 +38,44 @@
   .collapsed-div {
     gap: 0.8rem;
   }
+
+  .subscribe-section {
+    flex-direction: column;
+  }
+
+  .subscribe-text {
+    display: none;
+  }
+
+  .footer-header {
+    flex-direction: column;
+  }
+
+  .footer-main {
+    gap: 0.8rem;
+    flex-direction: column;
+    border-left: 1px solid rgba(255, 255, 255, 0.205);
+  }
+
+  .links-container {
+    flex-direction: column;
+  }
+
+  .download-section {
+    p {
+      display: none;
+    }
+  }
+
+  .download-cta {
+    display: none;
+  }
+
+  .dropdown {
+    display: none;
+  }
+
+  .scroll {
+    display: none;
+  }
 }

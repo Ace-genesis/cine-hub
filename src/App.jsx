@@ -1,31 +1,20 @@
-import Header from "./components/header";
 import Homepage from "./pages/homepage";
+import Movies from "./pages/moviesPage";
+import Details from "./pages/details";
+import Header from "./components/header";
 import Footer from "./components/footer";
 
+import { Routes, Route } from "react-router-dom";
+
 function App() {
-  /*async function fetchMovie() {
-    try {
-      const url = new URL("https://api.themoviedb.org/3/movie/popular");
-      url.searchParams.set("api_key", "d8390fd460735ed62c17d261e95e4987");
-
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-      const data = await response.json();
-
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  fetchMovie();*/
   return (
     <>
       <Header />
-      <Homepage />
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/movies" element={<Movies />} />
+        <Route path="/details" element={<Details />} />
+      </Routes>
       <Footer />
     </>
   );
