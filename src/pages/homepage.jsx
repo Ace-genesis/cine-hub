@@ -11,13 +11,11 @@ function Homepage() {
   const [adultAnimation, setAdultAnimation] = useState([]);
   const [anime, setAnime] = useState([]);
   const [nollywood, setNollywood] = useState([]);
-  const [runTime, setRunTime] = useState();
 
   const apiUrls = [
     "movie/popular",
     "trending/all/day",
     "tv/popular",
-    `movie/${popularMovies[0]?.id}?append_to_response=release_dates`,
     "discover/movie",
     "discover/tv",
   ];
@@ -26,11 +24,13 @@ function Homepage() {
     popularMoviesUrl,
     trendingMoviesUrl,
     popularTvUrl,
-    heroMovieDetails,
     nollyMovies,
     animeUrl,
   ] = apiUrls;
 
+  /*
+  fetching adult animation
+   */
   useEffect(() => {
     async function getAdultAnimatedShows() {
       const adultShows = [];
@@ -64,28 +64,42 @@ function Homepage() {
 
         page++;
       }
-      setAdultAnimation(processData(adultShows.slice(0, 20)));
+
+      const uniqueShows = [
+        ...new Map(adultShows.map((show) => [show.id, show])).values(),
+      ];
+
+      setAdultAnimation(processData(uniqueShows.slice(0, 20)));
     }
 
     getAdultAnimatedShows();
   }, []);
 
+  /*
+  fetching movie categories
+   */
   useEffect(() => {
     async function fetchRawData() {
-      const popular = await getMovies(popularMoviesUrl, { page: 1 });
-      const trending = await getMovies(trendingMoviesUrl, { page: 1 });
-      const tv = await getMovies(popularTvUrl, { page: 1 });
+      const popular = await getMovies(popularMoviesUrl, {
+        page: 1,
+      });
+      const trending = await getMovies(trendingMoviesUrl, {
+        page: 1,
+      });
+      const tv = await getMovies(popularTvUrl, {
+        page: 1,
+      });
       const nolly = await getMovies(nollyMovies, {
         page: 1,
         with_origin_country: "NG",
+        sort_by: "popularity.desc",
       });
       const japan = await getMovies(animeUrl, {
         with_origin_country: "JP",
         with_origin_language: "ja",
         with_genres: 16,
+        sort_by: "popularity.desc",
       });
-
-      console.log(japan);
 
       setPopularMovies(processData(popular.results));
       setTrendingMovies(processData(trending.results));
@@ -97,14 +111,18 @@ function Homepage() {
     fetchRawData();
   }, []);
 
+  /*Fetch show details */
   useEffect(() => {
     if (!popularMovies.length) {
       return;
     }
     async function fetchRawData() {
-      const details = await getMovies(heroMovieDetails);
+      const details = await getMovies(
+        trendingMovies[0].showType === "tv"
+          ? `tv/${trendingMovies[0]?.id}`
+          : `movie/${trendingMovies[0]?.id}`,
+      );
 
-      setRunTime(formatRuntime(details.runtime));
       setMovieDetails(processDetails(details));
     }
 
@@ -141,21 +159,22 @@ function Homepage() {
     });
   }
 
-  function formatRuntime(runtime) {
+  /* function formatRuntime(runtime) {
     const hours = Math.floor(runtime / 60);
     const minutes = runtime % 60;
 
     return `${hours}h ${minutes}m`;
-  }
+  }*/
 
   function processData(state) {
     return state?.map((item) => {
       return {
         id: item.id,
-        title: item.title,
+        title: item.title || item.name,
         overview: item.overview,
         url: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
-        releaseDate: item.release_date,
+        releaseDate: item.release_date || item.first_air_date,
+        showType: item.media_type,
       };
     });
   }
@@ -164,12 +183,11 @@ function Homepage() {
     <>
       <main>
         <Hero
-          image={popularMovies[0].url}
-          title={popularMovies[0].title}
-          year={popularMovies[0].releaseDate.split("-")[0]}
+          image={trendingMovies[0].url}
+          title={trendingMovies[0].title}
+          year={trendingMovies[0].releaseDate.split("-")[0]}
           details={movieDetails}
-          overview={popularMovies[0].overview}
-          runtime={runTime}
+          overview={trendingMovies[0].overview}
         />
         <MovieList category={trendingMovies} title={"Trending"} />
         <MovieList category={popularMovies} title={"Popular Movies"} />

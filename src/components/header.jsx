@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Hamburger() {
   return (
-    <button className="hamburger">
+    <button className="hamburger" onClick={() => console.log("open")}>
       <span></span>
       <span></span>
       <span></span>

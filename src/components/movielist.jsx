@@ -1,21 +1,11 @@
 import "../css/main.css";
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import MovieCard from "./movieCard.jsx";
 
 function MovieList({ category, title }) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const movieContainer = useRef(null);
-
-  if (!category.length) {
-    return (
-      <article className="movie-card loading">
-        <div className="card-image-container">
-          <img src="null" alt="" className="card-image loading" />
-        </div>
-      </article>
-    );
-  }
 
   function scroll(direction) {
     movieContainer.current.scrollBy({
@@ -35,18 +25,8 @@ function MovieList({ category, title }) {
     );
   }
 
-  function findId(e) {
-    console.log(e.currentTarget.id);
-  }
-
   const movieList = category.map((item) => {
-    return (
-      <Link className="movie-card" key={item.id} to={"/details"}>
-        <div className="card-image-container" id={item.id} onClick={findId}>
-          <img src={item.url} alt={item.title} className="card-image " />
-        </div>
-      </Link>
-    );
+    return <MovieCard key={item.id} item={item} />;
   });
 
   return (
