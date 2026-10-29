@@ -1,0 +1,71 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Brand and surfaces */
+  --canvas-color: #070d14;
+  --surface-color: #0d1621;
+  --elevated-color: #142131;
+  --border-color: #263647;
+
+  /* Brand accents */
+  --brand-color: #f21d48;
+  --brand-hover-color: #ff3b60;
+
+  /* Text */
+  --primary-text-color: #f5f7fa;
+  --secondary-text-color: #9ba8b8;
+
+  /* Status */
+  --success: #35c98a;
+  --warning: #f6b84a;
+  --error: #ff5a67;
+
+  /* Spacing: 4px base scale */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: Inter, system-ui, sans-serif;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+
+  /* Layout */
+  --container-max: 1440px;
+  --page-gutter: 24px;
+
+  /* Effects */
+  --shadow-card: 0 4px 16px rgb(0 0 0 / 20%);
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  --space-fluid-sm: clamp(8px, 1vw, 16px);
+  --space-fluid-md: clamp(0.5rem, 1vw, 2rem);
+  --space-fluid-lg: clamp(16px, 3vw, 48px);
+
+  --text-fluid-sm: clamp(0.7rem, 2vw, 1rem);
+  --text-fluid-base: clamp(1.2rem, 2.5vw, 2rem);
+  --text-fluid-lg: clamp(3rem, 6vw, 5.5rem);
+
+  --page-gutter-fluid: clamp(16px, 3vw, 40px);
+}

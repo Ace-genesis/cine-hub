@@ -1,6 +1,6 @@
-import { getMovies } from "../components/fetchMovies";
+import { getMovies } from "../fetchMovies";
 import { useEffect, useState } from "react";
-import MovieList from "../components/movielist";
+import MovieList from "../movielist";
 
 function Movies() {
   const [nowPlaying, setNowPlaying] = useState([]);
@@ -8,8 +8,6 @@ function Movies() {
   useEffect(() => {
     async function fetchRawData() {
       const playing = await getMovies("movie/now_playing", { page: 1 });
-
-      console.log(playing.results);
 
       setNowPlaying(processData(playing));
     }

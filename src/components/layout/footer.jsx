@@ -1,21 +1,22 @@
 import { Link } from "react-router-dom";
+import { Mail } from "lucide-react";
 
 function Footer() {
   return (
-    <footer>
-      <article className="subscribe-section">
-        <div className="subscribe-content">
-          <h3 className="subscribe-heading">Never Miss a Movie</h3>
-          <p className="subscribe-text">
+    <footer className="mt-4 p-6">
+      <article className="sm:flex bg-surface border rounded-md items-center p-4">
+        <div className="subscribe-content flex-grow ">
+          <h3 className="text-fluid-sm">Never Miss a Movie</h3>
+          <p className="hidden sm:flex text-fluid-sm">
             Get the latest updates on new release, trending titles and more.
           </p>
         </div>
-        <form className="subscribe-form">
-          <div className="input-div">
-            <i className="fa-regular fa-envelope"></i>
+        <form className="subscribe-form flex gap-2">
+          <div className="border rounded-md bg-elevated items-center p-2 gap-2 max-w-500 w-full flex">
+            <Mail />
             <input
               type="text"
-              className="subscribe-input"
+              className="bg-transparent border-0 text-primary w-full"
               placeholder="Enter your email address"
             />
           </div>

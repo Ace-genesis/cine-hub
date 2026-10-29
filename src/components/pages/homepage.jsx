@@ -1,7 +1,7 @@
-import { getMovies } from "../components/fetchMovies";
-import Hero from "../components/hero";
-import { useEffect, useState } from "react";
-import MovieList from "../components/movielist";
+import Hero from "../hero";
+import { useEffect, useState, useContext } from "react";
+import MovieList from "../movielist";
+import { AppContext } from "../../context/AppContext";
 
 function Homepage() {
   const [popularMovies, setPopularMovies] = useState([]);
@@ -11,6 +11,7 @@ function Homepage() {
   const [adultAnimation, setAdultAnimation] = useState([]);
   const [anime, setAnime] = useState([]);
   const [nollywood, setNollywood] = useState([]);
+  const { getMovies } = useContext(AppContext);
 
   const apiUrls = [
     "movie/popular",
@@ -69,7 +70,7 @@ function Homepage() {
         ...new Map(adultShows.map((show) => [show.id, show])).values(),
       ];
 
-      setAdultAnimation(processData(uniqueShows.slice(0, 20)));
+      setAdultAnimation(processData(uniqueShows.slice(0, 20), "tv"));
     }
 
     getAdultAnimatedShows();
@@ -101,11 +102,11 @@ function Homepage() {
         sort_by: "popularity.desc",
       });
 
-      setPopularMovies(processData(popular.results));
-      setTrendingMovies(processData(trending.results));
-      setPopularTv(processData(tv.results));
-      setNollywood(processData(nolly.results));
-      setAnime(processData(japan.results));
+      setPopularMovies(processData(popular.results, "movie"));
+      setTrendingMovies(processData(trending.results, "movie"));
+      setPopularTv(processData(tv.results, "tv"));
+      setNollywood(processData(nolly.results, "movie"));
+      setAnime(processData(japan.results, "tv"));
     }
 
     fetchRawData();
@@ -131,21 +132,21 @@ function Homepage() {
 
   if (!popularMovies.length) {
     return (
-      <section className="hero skeleton loading">
-        <article className="hero-content ">
-          <p className="trending loading"></p>
-          <h2 className="hero-title loading"></h2>
-          <section className="movie-info loading">
-            <p className="release-year loading"></p>
-            <ul className="movie-genre loading"></ul>
-          </section>
-          <section className="movie-overview loading"></section>
-          <footer className="cta ">
-            <button className="primary-btn loading"></button>
-            <button className="secondary-btn loading"></button>
-          </footer>
-        </article>
-      </section>
+      <>
+        <main className="homepage">
+          {Array.from({ length: 6 }, (_, index) => (
+            <section className="movie-list-skeleton" key={index}>
+              <div className="skeleton-heading"></div>
+
+              <div className="skeleton-cards">
+                {Array.from({ length: 6 }, (_, cardIndex) => (
+                  <div className="skeleton-poster" key={cardIndex} />
+                ))}
+              </div>
+            </section>
+          ))}
+        </main>
+      </>
     );
   }
 
@@ -159,38 +160,36 @@ function Homepage() {
     });
   }
 
-  /* function formatRuntime(runtime) {
-    const hours = Math.floor(runtime / 60);
-    const minutes = runtime % 60;
-
-    return `${hours}h ${minutes}m`;
-  }*/
-
-  function processData(state) {
+  function processData(state, defaultType) {
     return state?.map((item) => {
       return {
         id: item.id,
         title: item.title || item.name,
         overview: item.overview,
         url: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
+        backdropUrl: `https://image.tmdb.org/t/p/w1280/${item.backdrop_path}`,
         releaseDate: item.release_date || item.first_air_date,
-        showType: item.media_type,
+        showType: item.media_type || defaultType,
       };
     });
   }
 
   return (
     <>
-      <main>
+      <main className="p-sm-fluid overflow-y-hidden">
         <Hero
-          image={trendingMovies[0].url}
+          image={trendingMovies[0].backdropUrl}
           title={trendingMovies[0].title}
           year={trendingMovies[0].releaseDate.split("-")[0]}
           details={movieDetails}
           overview={trendingMovies[0].overview}
         />
         <MovieList category={trendingMovies} title={"Trending"} />
-        <MovieList category={popularMovies} title={"Popular Movies"} />
+        <MovieList
+          category={popularMovies}
+          title={"Popular Movies"}
+          showType={"movie"}
+        />
         <MovieList category={popularTv} title={"Popular Series"} />
         <MovieList category={anime} title={"Anime"} />
         <MovieList category={adultAnimation} title={"Adult Animation"} />
