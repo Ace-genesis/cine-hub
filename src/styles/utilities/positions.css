@@ -24,6 +24,10 @@
   top: 0;
 }
 
+.top-15 {
+  top: 15px;
+}
+
 .right-0 {
   right: 0;
 }
@@ -47,6 +51,10 @@
 
 .right-10 {
   right: -15px;
+}
+
+.right-15 {
+  right: 15px;
 }
 
 .inset-0 {

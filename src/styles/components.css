@@ -12,6 +12,15 @@
   transition: var(--transition-normal);
 }
 
+.primary-btn:disabled {
+  background-color: var(--brand-color);
+  color: var(--secondary-text-color);
+  border-color: var(--border-color);
+  opacity: var(--disabled-opacity);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .primary-btn:hover {
   background-color: var(--brand-hover-color);
 }
@@ -43,10 +52,11 @@
 }
 
 .card {
-  width: clamp(100px, 18vw, 400px);
+  width: clamp(100px, 17vw, 400px);
   height: auto;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
+  scroll-snap-align: start;
   flex-shrink: 0;
 }
 
@@ -56,7 +66,7 @@
   scroll-snap-type: x mandatory;
 }
 
-.card {
+.snap {
   scroll-snap-align: start;
   flex-shrink: 0;
 }
@@ -96,12 +106,7 @@
   z-index: 2;
 }
 
-@keyframes shimmer {
-  from {
-    background-position: 100% 0;
-  }
-
-  to {
-    background-position: -100% 0;
-  }
+.input:focus-within {
+  border-color: var(--focus-color);
+  box-shadow: var(--focus-ring);
 }

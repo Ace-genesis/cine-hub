@@ -11,7 +11,7 @@ function Hero({ image, title, year, runtime, details, overview }) {
     <>
       {isLoading && <HeroLoading />}
       <section
-        className={`relative rounded-md hero flex flex-col justify-end p-lg-fluid mb-6 mt-2 ${isLoading ? "hidden" : ""}`}
+        className={`relative rounded-md hero flex flex-col border p-lg-fluid mb-6 mt-2 ${isLoading ? "hidden" : ""}`}
       >
         <picture className="absolute inset-0 z-0 h-full w-full overflow-hidden rounded-md">
           <img

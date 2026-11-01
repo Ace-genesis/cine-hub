@@ -7,7 +7,7 @@ import { Search, Bell, CircleUserRound, Menu } from "lucide-react";
 function Header() {
   return (
     <header className="flex p-md-fluid items-center justify-between bg-canvas sticky top-0 z-50">
-      <Link to={"/"} className="site-name sm:hidden">
+      <Link to={"/"} className="site-name md:hidden">
         <h1 className="text-fluid-base">
           Cine<span className="text-brand">Hub</span>
         </h1>
@@ -26,16 +26,16 @@ function Header() {
         </div>
       </div>
 
-      <div className="flex gap-4 px-4 items-center justify-center">
+      <div className="flex gap-8 px-4 items-center justify-center">
         <button className="bg-transparent border-0 text-primary">
-          <Bell size={22} />
+          <Bell size={35} />
         </button>
         <div>
           <button
             className="bg-transparent border-0 text-primary"
             onClick={() => setDropdownMode((current) => !current)}
           >
-            <CircleUserRound size={30} />
+            <CircleUserRound size={40} />
           </button>
         </div>
       </div>

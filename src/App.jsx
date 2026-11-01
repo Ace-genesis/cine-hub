@@ -4,8 +4,8 @@ import Details from "./components/pages/details";
 import Header from "./components/layout/header";
 import Sidebar from "./components/layout/sidebar";
 import Footer from "./components/layout/footer";
-import SignIn from "./components/pages/signin";
-import SignUp from "./components/pages/signup";
+import SignIn from "./components/pages/authentication/signin";
+import SignUp from "./components/pages/authentication/signup";
 import MyList from "./components/pages/myList";
 import { AppProvider, AppContext } from "./context/AppContext";
 import { supabase } from "./lib/supabaseClient";
@@ -41,7 +41,7 @@ function AppContent() {
       <div className="flex gap-4">
         {!isAuth && <Sidebar />}
 
-        <div className="max-w-screen overflow-y-hidden border rounded-md">
+        <div className="max-w-screen overflow-y-hidden rounded-md container">
           <>{!isAuth && <Header />}</>
           <Routes>
             <Route path="/" element={<Homepage />} />

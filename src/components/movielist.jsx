@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
+import { AppContext } from "../context/AppContext.jsx";
 import MovieCard from "./movieCard.jsx";
 import { CircleArrowLeft, CircleArrowRight } from "lucide-react";
 
@@ -6,26 +7,7 @@ function MovieList({ category, title }) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const movieContainer = useRef(null);
-
-  function scroll(direction) {
-    movieContainer.current.scrollBy({
-      left:
-        direction === "right"
-          ? movieContainer.current.clientWidth
-          : -movieContainer.current.clientWidth,
-      behavior: "smooth",
-    });
-  }
-
-  function handleScroll() {
-    setCanScrollLeft(movieContainer.current.scrollLeft > 0);
-    setCanScrollRight(
-      movieContainer.current.scrollLeft <
-        movieContainer.current.scrollWidth -
-          movieContainer.current.clientWidth -
-          2,
-    );
-  }
+  const { scroll, handleScroll } = useContext(AppContext);
 
   const movieList = category.map((item) => {
     return <MovieCard key={item.id} item={item} />;
@@ -37,8 +19,8 @@ function MovieList({ category, title }) {
       <div className="flex relative ">
         {canScrollLeft && (
           <button
-            onClick={() => scroll("left")}
-            className="absolute left-10 top-50 flex items-center justify-center bg-transparent border-0 hidden md:flex"
+            onClick={() => scroll("left", movieContainer)}
+            className="absolute left-10 top-50 flex items-center justify-center bg-transparent border-0 hidden sm:flex"
           >
             <CircleArrowLeft
               size={50}
@@ -53,15 +35,17 @@ function MovieList({ category, title }) {
         <div
           className="flex gap-4 container"
           ref={movieContainer}
-          onScroll={handleScroll}
+          onScroll={() =>
+            handleScroll(movieContainer, setCanScrollLeft, setCanScrollRight)
+          }
         >
           {movieList}
         </div>
 
         {canScrollRight && (
           <button
-            onClick={() => scroll("right")}
-            className="absolute right-10 top-50 flex items-center justify-center bg-transparent border-0 hidden md:flex"
+            onClick={() => scroll("right", movieContainer)}
+            className="absolute right-10 top-50 flex items-center justify-center bg-transparent border-0 hidden sm:flex"
           >
             <CircleArrowRight
               size={50}

@@ -1,11 +1,18 @@
 import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../context/AppContext.jsx";
 import { supabase } from "../../lib/supabaseClient.js";
+import { Bookmark } from "lucide-react";
 import MovieCard from "../movieCard.jsx";
+import MovieList from "../movielist.jsx";
+import { Link } from "react-router-dom";
+import { processData, getMovies } from "../../services/api.js";
 
 function MyList() {
-  const { myList, setMyList, getMovies, isSignedIn } = useContext(AppContext);
+  const { myList, setMyList, isSignedIn, trendingMovies } =
+    useContext(AppContext);
   const [error, setError] = useState("");
+
+  console.log("trendingMovies MyList:", trendingMovies);
 
   useEffect(() => {
     const retrieveMyList = async () => {
@@ -45,37 +52,33 @@ function MyList() {
     retrieveMyList();
   }, []);
 
-  function processData(state) {
-    return state?.map((item) => {
-      return {
-        id: item.id,
-        title: item.title || item.name,
-        overview: item.overview,
-        url: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
-        releaseDate: item.release_date || item.first_air_date,
-        showType: item.media_type,
-      };
-    });
-  }
-
   const movieList = myList.map((item) => {
     return <MovieCard key={item.id} item={item} />;
   });
 
   return isSignedIn ? (
-    movieList.length > 0 ? (
-      <div className="popular-movies my-list">{movieList}</div>
-    ) : (
-      <div className="empty-library">
-        <h2>My List</h2>
-        <p>No movies in your list.</p>
-      </div>
-    )
+    <div className="popular-movies my-list">{movieList}</div>
   ) : (
-    <div className="empty-library">
+    <main className="border rounded-md p-4">
       <h2>My List</h2>
-      <p>Please sign in to view your list.</p>
-    </div>
+      <section className="flex flex-col items-center justify-center gap-4 p-8 border rounded-md bg-surface">
+        <div className="flex flex-col items-center gap-4">
+          <Bookmark
+            size={90}
+            strokeWidth={1}
+            className="border rounded-full bg-elevated p-4"
+          />
+          <div className="flex flex-col items-center gap-2">
+            <h3>Your List is Empty</h3>
+            <p>Add some movies to your list to see them here.</p>
+          </div>
+          <Link to={"/"} className="primary-btn">
+            Browse Shows
+          </Link>
+        </div>
+      </section>
+      <MovieList category={trendingMovies} title={"Recommended for you"} />
+    </main>
   );
 }
 

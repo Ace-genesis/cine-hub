@@ -1,6 +1,19 @@
 .border {
   border: 1px solid var(--border-color);
 }
+
+.border-error {
+  border: 1px solid var(--error-border);
+}
+
+.border-success {
+  border: 1px solid var(--success-border);
+}
+
+.border-info {
+  border: 1px solid var(--success-info);
+}
+
 .border-0 {
   border: 0;
 }
@@ -12,7 +25,12 @@
 .border-top {
   border-top: 2px solid var(--border-color);
 }
-
+.border-bottom {
+  border-bottom: 2px solid var(--border-color);
+}
+.border-bottom-brand {
+  border-bottom: 4px solid var(--brand-color);
+}
 .rounded-sm {
   border-radius: var(--radius-sm);
 }

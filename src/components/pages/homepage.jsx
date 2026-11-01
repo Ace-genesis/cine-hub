@@ -2,43 +2,35 @@ import Hero from "../hero";
 import { useEffect, useState, useContext } from "react";
 import MovieList from "../movielist";
 import { AppContext } from "../../context/AppContext";
+import { Mail } from "lucide-react";
+import { getMovies, processData, processDetails } from "../../services/api.js";
 
 function Homepage() {
-  const [popularMovies, setPopularMovies] = useState([]);
-  const [trendingMovies, setTrendingMovies] = useState([]);
-  const [popularTv, setPopularTv] = useState([]);
+  const {
+    popularMovies,
+    setPopularMovies,
+    trendingMovies,
+    setTrendingMovies,
+    popularTv,
+    setPopularTv,
+    adultAnimation,
+    setAdultAnimation,
+    anime,
+    setAnime,
+    nollywood,
+    setNollywood,
+    apiUrls,
+  } = useContext(AppContext);
+
   const [movieDetails, setMovieDetails] = useState([]);
-  const [adultAnimation, setAdultAnimation] = useState([]);
-  const [anime, setAnime] = useState([]);
-  const [nollywood, setNollywood] = useState([]);
-  const { getMovies } = useContext(AppContext);
 
-  const apiUrls = [
-    "movie/popular",
-    "trending/all/day",
-    "tv/popular",
-    "discover/movie",
-    "discover/tv",
-  ];
-
-  const [
-    popularMoviesUrl,
-    trendingMoviesUrl,
-    popularTvUrl,
-    nollyMovies,
-    animeUrl,
-  ] = apiUrls;
-
-  /*
-  fetching adult animation
-   */
   useEffect(() => {
     async function getAdultAnimatedShows() {
       const adultShows = [];
       let page = 1;
 
       while (adultShows.length < 20) {
-        const data = await getMovies("discover/tv", {
+        const data = await getMovies(apiUrls.discoverTv, {
           page,
           with_genres: 16,
           sort_by: "popularity.desc",
@@ -77,25 +69,26 @@ function Homepage() {
   }, []);
 
   /*
-  fetching movie categories
-   */
+    fetching movie categories
+     */
   useEffect(() => {
     async function fetchRawData() {
-      const popular = await getMovies(popularMoviesUrl, {
+      const popular = await getMovies(apiUrls.popularMovies, {
         page: 1,
       });
-      const trending = await getMovies(trendingMoviesUrl, {
+      const trending = await getMovies(apiUrls.trendingMovies, {
         page: 1,
       });
-      const tv = await getMovies(popularTvUrl, {
+      const tv = await getMovies(apiUrls.popularTv, {
         page: 1,
       });
-      const nolly = await getMovies(nollyMovies, {
+      const nolly = await getMovies(apiUrls.discoverMovies, {
         page: 1,
         with_origin_country: "NG",
         sort_by: "popularity.desc",
       });
-      const japan = await getMovies(animeUrl, {
+      const japan = await getMovies(apiUrls.discoverTv, {
+        page: 1,
         with_origin_country: "JP",
         with_origin_language: "ja",
         with_genres: 16,
@@ -124,7 +117,15 @@ function Homepage() {
           : `movie/${trendingMovies[0]?.id}`,
       );
 
-      setMovieDetails(processDetails(details));
+      setMovieDetails(
+        processDetails(details).map((item) => {
+          return (
+            <li className="detail-list" key={item.id}>
+              {item.genre}
+            </li>
+          );
+        }),
+      );
     }
 
     fetchRawData();
@@ -150,33 +151,11 @@ function Homepage() {
     );
   }
 
-  function processDetails(state) {
-    return state.genres.map((item) => {
-      return (
-        <li className="detail-list" key={item.id}>
-          {item.name}
-        </li>
-      );
-    });
-  }
-
-  function processData(state, defaultType) {
-    return state?.map((item) => {
-      return {
-        id: item.id,
-        title: item.title || item.name,
-        overview: item.overview,
-        url: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
-        backdropUrl: `https://image.tmdb.org/t/p/w1280/${item.backdrop_path}`,
-        releaseDate: item.release_date || item.first_air_date,
-        showType: item.media_type || defaultType,
-      };
-    });
-  }
+  console.log("trendingMovies:", trendingMovies);
 
   return (
     <>
-      <main className="p-sm-fluid overflow-y-hidden">
+      <main className="p-sm-fluid overflow-y-hidden border rounded-md ">
         <Hero
           image={trendingMovies[0].backdropUrl}
           title={trendingMovies[0].title}
@@ -195,6 +174,25 @@ function Homepage() {
         <MovieList category={adultAnimation} title={"Adult Animation"} />
         <MovieList category={nollywood} title={"Nollywood Movies"} />
       </main>
+      <article className="sm:flex bg-surface border rounded-md items-center p-6 mt-6 mb-6">
+        <div className="subscribe-content flex-grow ">
+          <h3 className="text-fluid-sm">Never Miss a Movie</h3>
+          <p className="hidden sm:flex text-fluid-sm">
+            Get the latest updates on new release, trending titles and more.
+          </p>
+        </div>
+        <form className="subscribe-form flex gap-2">
+          <div className="border rounded-md bg-elevated items-center p-2 gap-2 max-w-500 w-full flex">
+            <Mail />
+            <input
+              type="text"
+              className="bg-transparent border-0 text-primary w-full"
+              placeholder="Enter your email address"
+            />
+          </div>
+          <button className="primary-btn">Subscribe</button>
+        </form>
+      </article>
     </>
   );
 }

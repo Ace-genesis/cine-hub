@@ -1,12 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
+import { getMovies, processDetails } from "../../services/api.js";
 import Hero from "../hero";
 
 function Details() {
   const { showType, id } = useParams();
-  const { getMovies } = useContext(AppContext);
   const [showDetails, setShowDetails] = useState(null);
+  const [genres, setGenres] = useState([]);
 
   console.log("Show Type:", showType);
   console.log("ID:", id);
@@ -16,8 +17,9 @@ function Details() {
       try {
         const details = await getMovies(`${showType}/${id}`);
 
+        setGenres(details.genres.map((item) => <li>{item.name}</li>));
         setShowDetails(details);
-        console.log(details);
+        console.log("details:", details);
       } catch (error) {
         console.error("Error fetching details:", error);
       }
@@ -57,7 +59,7 @@ function Details() {
   );
 
   return (
-    <>
+    <main className="border rounded-md">
       <Hero
         image={`https://image.tmdb.org/t/p/w1280/${showDetails?.backdrop_path}`}
         title={showDetails?.title || showDetails?.name}
@@ -68,9 +70,10 @@ function Details() {
         runtime={formatRuntime(
           showDetails?.runtime || showDetails?.episode_run_time?.[0],
         )}
+        details={genres}
         overview={showDetails?.overview}
       />
-    </>
+    </main>
   );
 }
 

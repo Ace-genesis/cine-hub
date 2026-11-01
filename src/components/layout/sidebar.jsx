@@ -9,6 +9,7 @@ import {
   LogIn,
   Bolt,
   Star,
+  Play,
 } from "lucide-react";
 import { useState, useContext } from "react";
 import { AppContext } from "../../context/AppContext";
@@ -20,10 +21,11 @@ function Sidebar() {
   const location = useLocation();
 
   return (
-    <aside className="hidden md:flex flex-col  min-h-screen">
+    <aside className="hidden md:flex flex-col sticky top-0 shrink-0 h-screen w-180 ">
       <section className="flex-grow">
-        <Link to={"/"} className="site-name">
-          <h1 className="text-fluid-base p-4 ">
+        <Link to={"/"} className="flex items-center p-4 gap-1">
+          <Play fill="var(--brand-color)" color="var(--brand-color)" />
+          <h1 className="text-fluid-base  flex items-center ">
             Cine<span className="text-brand">Hub</span>
           </h1>
         </Link>
@@ -63,7 +65,7 @@ function Sidebar() {
         </nav>
       </section>
 
-      <div className="border-top py-4 px-2">
+      <div className="border-top border-bottom py-4 px-2">
         <h3>Settings</h3>
         <div className="flex flex-col gap-4">
           <Link to={"/my-list"} className="flex  items-center gap-4 p-2">

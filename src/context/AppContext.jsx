@@ -1,27 +1,18 @@
 import { createContext, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { useEffect } from "react";
 
 export const AppContext = createContext(null);
 
 export const AppProvider = ({ children }) => {
   const [myList, setMyList] = useState([]);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [showDetails, setShowDetails] = useState(null);
-
-  const getMovies = async (apiLink, params = {}) => {
-    try {
-      const url = buildUrl(apiLink, params);
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-
-      return response.json();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [trendingMovies, setTrendingMovies] = useState([]);
+  const [popularTv, setPopularTv] = useState([]);
+  const [adultAnimation, setAdultAnimation] = useState([]);
+  const [anime, setAnime] = useState([]);
+  const [nollywood, setNollywood] = useState([]);
 
   const handleSignOut = async () => {
     console.log("it reached here");
@@ -42,29 +33,54 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const buildUrl = (apiLink, params) => {
-    const url = new URL(`https://api.themoviedb.org/3/${apiLink}`);
-
-    url.searchParams.set("api_key", import.meta.env.VITE_TMDB_API_KEY);
-
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        url.searchParams.set(key, value);
-      }
-    });
-
-    return url.toString();
+  const apiUrls = {
+    popularMovies: "movie/popular",
+    trendingMovies: "trending/all/day",
+    popularTv: "tv/popular",
+    discoverMovies: "discover/movie",
+    discoverTv: "discover/tv",
   };
 
+  function scroll(direction, container) {
+    container.current.scrollBy({
+      left:
+        direction === "right"
+          ? container.current.clientWidth
+          : -container.current.clientWidth,
+      behavior: "smooth",
+    });
+  }
+
+  function handleScroll(container, setCanScrollLeft, setCanScrollRight) {
+    setCanScrollLeft(container.current.scrollLeft > 0);
+    setCanScrollRight(
+      container.current.scrollLeft <
+        container.current.scrollWidth - container.current.clientWidth - 2,
+    );
+  }
   return (
     <AppContext.Provider
       value={{
         myList,
         setMyList,
-        getMovies,
         isSignedIn,
         setIsSignedIn,
         handleSignOut,
+        popularMovies,
+        setPopularMovies,
+        trendingMovies,
+        setTrendingMovies,
+        popularTv,
+        setPopularTv,
+        adultAnimation,
+        setAdultAnimation,
+        anime,
+        setAnime,
+        nollywood,
+        setNollywood,
+        apiUrls,
+        scroll,
+        handleScroll,
       }}
     >
       {children}

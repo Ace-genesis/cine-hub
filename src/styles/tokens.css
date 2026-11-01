@@ -17,8 +17,20 @@
 
   /* Status */
   --success: #35c98a;
+  --success-bg: rgb(53 201 138 / 12%);
+  --success-border: rgb(53 201 138 / 30%);
+
   --warning: #f6b84a;
+  --warning-bg: rgb(246 184 74 / 12%);
+  --warning-border: rgb(246 184 74 / 30%);
+
   --error: #ff5a67;
+  --error-bg: rgb(255 90 103 / 12%);
+  --error-border: rgb(255 90 103 / 30%);
+
+  --info: #4da3ff;
+  --info-bg: rgb(77 163 255 / 12%);
+  --info-border: rgb(77 163 255 / 30%);
 
   /* Spacing: 4px base scale */
   --space-0: 0;
@@ -63,9 +75,19 @@
   --space-fluid-md: clamp(0.5rem, 1vw, 2rem);
   --space-fluid-lg: clamp(16px, 3vw, 48px);
 
-  --text-fluid-sm: clamp(0.7rem, 2vw, 1rem);
+  --text-fluid-sm: clamp(0.7rem, 1vw, 1rem);
   --text-fluid-base: clamp(1.2rem, 2.5vw, 2rem);
-  --text-fluid-lg: clamp(3rem, 6vw, 5.5rem);
+  --text-fluid-lg: clamp(2.5rem, 2vw, 5rem);
 
   --page-gutter-fluid: clamp(16px, 3vw, 40px);
+
+  /* Interactive states */
+  --disabled-opacity: 0.5;
+  --focus-color: #4da3ff;
+  --focus-ring: 0 0 0 3px rgb(77 163 255 / 20%);
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgb(0 0 0 / 15%);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 20%);
+  --shadow-lg: 0 8px 32px rgb(0 0 0 / 30%);
 }

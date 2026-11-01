@@ -19,6 +19,18 @@
   background-color: transparent;
 }
 
+.bg-error {
+  background-color: var(--error-bg);
+}
+
+.bg-success {
+  background-color: var(--success-bg);
+}
+
+.bg-info {
+  background-color: var(--info-bg);
+}
+
 .text-primary {
   color: var(--primary-text-color);
 }
@@ -33,4 +45,8 @@
 }
 .text-warning {
   color: var(--warning);
+}
+
+.text-error {
+  color: var(--error);
 }
