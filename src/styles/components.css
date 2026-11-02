@@ -52,12 +52,20 @@
 }
 
 .card {
-  width: clamp(100px, 17vw, 400px);
   height: auto;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
+}
+
+.carousel-card {
+  width: clamp(100px, 17vw, 400px);
   scroll-snap-align: start;
   flex-shrink: 0;
+}
+
+.grid-card {
+  width: 100%;
+  min-width: 0;
 }
 
 .container {

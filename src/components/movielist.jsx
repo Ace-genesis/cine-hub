@@ -10,7 +10,7 @@ function MovieList({ category, title }) {
   const { scroll, handleScroll } = useContext(AppContext);
 
   const movieList = category.map((item) => {
-    return <MovieCard key={item.id} item={item} />;
+    return <MovieCard key={item.id} item={item} style="carousel-card" />;
   });
 
   return (
@@ -33,7 +33,7 @@ function MovieList({ category, title }) {
         )}
 
         <div
-          className="flex gap-4 container"
+          className="flex gap-4 container "
           ref={movieContainer}
           onScroll={() =>
             handleScroll(movieContainer, setCanScrollLeft, setCanScrollRight)

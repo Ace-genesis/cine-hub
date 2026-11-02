@@ -9,14 +9,13 @@
 @import "./utilities/colors.css";
 @import "./utilities/borders.css";
 @import "./utilities/effects.css";
-@import "./utilities/responsive.css";
 @import "./utilities/positions.css";
 @import "./utilities/images.css";
 @import "./utilities/animation.css";
 @import "./utilities/grid.css";
 
 @import "./components.css";
-
+@import "./utilities/responsive.css";
 .hero {
   height: 70dvh;
 }

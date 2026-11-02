@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import CardLoading from "./loadingStates/cardLoading";
 
-function MovieCard({ item }) {
+function MovieCard({ item, style }) {
   const [isCardLoading, setIsCardLoading] = useState(true);
   const { myList, setMyList, isSignedIn, getMovies } = useContext(AppContext);
 
@@ -51,7 +51,7 @@ function MovieCard({ item }) {
     <>
       {isCardLoading && <CardLoading />}
       <Link
-        className={`card ${isCardLoading ? "hidden" : ""}`}
+        className={`card ${style}  ${isCardLoading ? "hidden" : ""}`}
         onClick={() => navigate(`/details/${item.showType}/${item.id}`)}
       >
         <div className="aspect-poster w-full" id={item.id}>
