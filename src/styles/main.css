@@ -59,7 +59,7 @@
     @apply bg-canvas;
   }
   button {
-    @apply cursor-pointer active:scale-[0.99] flex items-center justify-center;
+    @apply cursor-pointer active:scale-[0.99] flex;
   }
 }
 

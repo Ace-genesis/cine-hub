@@ -65,7 +65,7 @@ function Hero({ image, title, year, runtime, details, overview }) {
           <section className="text-fluid-sm line-clamp-2">{overview}</section>
           <footer className="flex gap-4 ">
             <button
-              className="btn-primary"
+              className="btn-primary items-center"
               onClick={() => navigate(`/details/${item.showType}/${item.id}`)}
             >
               <Play />
