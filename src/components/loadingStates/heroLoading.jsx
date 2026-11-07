@@ -1,6 +1,6 @@
 function HeroLoading() {
   return (
-    <main className="p-sm-fluid overflow-y-hidden">
+    <main className="p-sm-fluid overflow-y-hidden min-h-[50dvh] sm:min-h-[70dvh] mb-6 mt-2">
       <section className="relative rounded-md hero flex flex-col justify-end p-lg-fluid mb-6 mt-2">
         {/* Background image placeholder */}
         <div className="loading absolute inset-0 z-20 h-full w-full rounded-md" />
