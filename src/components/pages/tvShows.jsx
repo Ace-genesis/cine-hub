@@ -28,6 +28,7 @@ function TvShows() {
 
   const [pageInput, setPageInput] = useState("");
   const [isShowLoading, setIsShowLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setIsShowLoading(true);
@@ -44,6 +45,7 @@ function TvShows() {
         setTotalPages(Math.min(allTvList.total_pages, maxApiPages));
       } catch (error) {
         setError(error.message);
+        console.log(error.message);
       } finally {
         setIsShowLoading(false);
       }
