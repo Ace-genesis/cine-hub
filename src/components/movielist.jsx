@@ -14,26 +14,28 @@ function MovieList({ category, title }) {
   });
 
   return (
-    <section className="bg-surface p-sm-fluid flex flex-col gap-4 ">
-      <h2 className="text-fluid-base border-left px-4">{title}</h2>
+    <section className="bg-surface text-primary flex flex-col gap-2">
+      <h2 className="text-base font-bold sm:text-2xl border-l-2 border-l-brand px-4">
+        {title}
+      </h2>
       <div className="flex relative ">
         {canScrollLeft && (
           <button
             onClick={() => scroll("left", movieContainer)}
-            className="absolute left-10 top-50 flex items-center justify-center bg-transparent border-0 hidden sm:flex"
+            className="absolute -left-1 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center bg-transparent border-0 "
           >
             <CircleArrowLeft
               size={50}
-              color="var(--primary-text-color)"
-              fill="var(--canvas-color)"
+              color="var(--color-primary)"
+              fill="var(--color-canvas)"
               strokeWidth={1}
-              className="opacity-50 "
+              className="opacity-60 "
             />
           </button>
         )}
 
         <div
-          className="flex gap-4 container "
+          className="flex gap-4 overflow-x-auto  scrollbar-none snap-x  "
           ref={movieContainer}
           onScroll={() =>
             handleScroll(movieContainer, setCanScrollLeft, setCanScrollRight)
@@ -45,14 +47,14 @@ function MovieList({ category, title }) {
         {canScrollRight && (
           <button
             onClick={() => scroll("right", movieContainer)}
-            className="absolute right-10 top-50 flex items-center justify-center bg-transparent border-0 hidden sm:flex"
+            className="absolute right-0 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center bg-transparent  "
           >
             <CircleArrowRight
               size={50}
-              color="var(--primary-text-color)"
-              fill="var(--canvas-color)"
+              color="var(--color-primary)"
+              fill="var(--color-canvas)"
               strokeWidth={1}
-              className="opacity-50 "
+              className="opacity-60 "
             />
           </button>
         )}

@@ -23,7 +23,7 @@ function Movies() {
   const { scroll, handleScroll } = useContext(AppContext);
 
   const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
-  const genre = searchParams.get("genre");
+  const genre = searchParams.get("genre") || undefined;
 
   const [pageInput, setPageInput] = useState("");
 
@@ -57,33 +57,47 @@ function Movies() {
     });
   }, [currentPage, genre]);
 
-  console.log("allMovies:", allMovies);
+  function updateSearchParam(page, genre) {
+    const params = { page: String(page) };
+
+    if (genre) {
+      params.genre = genre;
+    }
+
+    setSearchParams(params);
+  }
 
   return (
     <main className="border rounded-md">
-      <section className="bg-transparent  flex flex-col  relative py-2">
+      <section className="bg-transparent  flex flex-col  relative py-2 ">
         {canScrollLeft && (
           <button
             onClick={() => scroll("left", movieContainer)}
-            className="absolute left-0 top-50 flex items-center justify-center bg-transparent border-0 hidden sm:flex"
+            className="absolute -left-1 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center bg-transparent border-0 "
           >
             <CircleArrowLeft
-              size={30}
-              color="var(--primary-text-color)"
-              fill="var(--canvas-color)"
+              size={25}
+              color="var(--color-primary)"
+              fill="var(--color-canvas)"
               strokeWidth={1}
-              className="opacity-50 "
+              className="opacity-60 "
             />
           </button>
         )}
         <ul
-          className="flex overflow-x-auto gap-4  list-none  container"
+          className="flex overflow-x-auto gap-4  list-none  overflow-x-auto  scrollbar-none snap-x text-primary"
           ref={movieContainer}
           onScroll={() =>
             handleScroll(movieContainer, setCanScrollLeft, setCanScrollRight)
           }
         >
-          <li className="cursor-pointer flex items-center justify-center px-4 text-xs">
+          <li
+            className="cursor-pointer flex items-center justify-center px-4 text-xs"
+            onClick={() => {
+              setPageInput("");
+              updateSearchParam(1);
+            }}
+          >
             All
           </li>
           {movieGenres.map((item) => {
@@ -92,10 +106,8 @@ function Movies() {
                 className="cursor-pointer flex items-center justify-center px-2 text-xs snap"
                 key={item.id}
                 onClick={() => {
-                  setSearchParams({
-                    genre: String(item.id),
-                    page: "1",
-                  });
+                  setPageInput("");
+                  updateSearchParam(1, item.id);
                 }}
               >
                 {item.genre}
@@ -106,29 +118,26 @@ function Movies() {
         {canScrollRight && (
           <button
             onClick={() => scroll("right", movieContainer)}
-            className="absolute right-0 top-50 flex items-center justify-center bg-transparent border-0 hidden sm:flex"
+            className="absolute right-0 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center bg-transparent  "
           >
             <CircleArrowRight
-              size={30}
-              color="var(--primary-text-color)"
-              fill="var(--canvas-color)"
+              size={25}
+              color="var(--color-primary)"
+              fill="var(--color-canvas)"
               strokeWidth={1}
-              className="opacity-50 "
+              className="opacity-60 "
             />
           </button>
         )}
       </section>
 
-      <div className="flex flex-col justify-center items-center gap-4 p-4">
+      <div className="flex flex-col justify-center items-center gap-4 p-4 text-primary">
         <div className="flex justify-center items-center gap-4 p-4">
           <button
-            className={`${currentPage === 1 ? "hidden" : "primary-btn"}`}
+            className={`${currentPage === 1 ? "hidden" : "btn-primary"}`}
             onClick={() => {
               if (currentPage > 1) {
-                setSearchParams({
-                  page: String(currentPage - 1),
-                  genre: genre || undefined,
-                });
+                updateSearchParam(currentPage - 1, genre);
               }
             }}
           >
@@ -138,13 +147,10 @@ function Movies() {
             {currentPage} of {totalPages}
           </p>
           <button
-            className={`${currentPage === totalPages ? "hidden" : "primary-btn"}`}
+            className={`${currentPage === totalPages ? "hidden" : "btn-primary"}`}
             onClick={() => {
               if (currentPage < totalPages) {
-                setSearchParams({
-                  page: String(currentPage + 1),
-                  genre: genre || undefined,
-                });
+                updateSearchParam(currentPage + 1, genre);
               }
             }}
           >
@@ -156,11 +162,8 @@ function Movies() {
           className="flex justify-center items-center gap-4 p-4 "
           onSubmit={(e) => {
             e.preventDefault();
-            console.log("pageNumber:", pageInput);
-            setSearchParams({
-              page: String(pageInput),
-              genre: genre || undefined,
-            });
+            updateSearchParam(pageInput, genre);
+            setPageInput("");
           }}
         >
           <input
@@ -173,7 +176,7 @@ function Movies() {
               setPageInput(e.target.value);
             }}
           />
-          <button className="primary-btn">Jump to</button>
+          <button className="btn-primary">Jump to</button>
         </form>
       </div>
 
@@ -183,16 +186,13 @@ function Movies() {
         ))}
       </div>
 
-      <div className="flex flex-col justify-center items-center gap-4 p-4">
+      <div className="flex flex-col justify-center items-center gap-4 p-4 text-primary">
         <div className="flex justify-center items-center gap-4 p-4">
           <button
-            className={`${currentPage === 1 ? "hidden" : "primary-btn"}`}
+            className={`${currentPage === 1 ? "hidden" : "btn-primary"}`}
             onClick={() => {
               if (currentPage > 1) {
-                setSearchParams({
-                  page: String(currentPage - 1),
-                  genre: genre || undefined,
-                });
+                updateSearchParam(currentPage - 1, genre);
               }
             }}
           >
@@ -202,13 +202,10 @@ function Movies() {
             {currentPage} of {totalPages}
           </p>
           <button
-            className={`${currentPage === totalPages ? "hidden" : "primary-btn"}`}
+            className={`${currentPage === totalPages ? "hidden" : "btn-primary"}`}
             onClick={() => {
               if (currentPage < totalPages) {
-                setSearchParams({
-                  page: String(currentPage + 1),
-                  genre: genre || undefined,
-                });
+                updateSearchParam(currentPage + 1, genre);
               }
             }}
           >
@@ -220,11 +217,8 @@ function Movies() {
           className="flex justify-center items-center gap-4 p-4 "
           onSubmit={(e) => {
             e.preventDefault();
-            console.log("pageNumber:", pageInput);
-            setSearchParams({
-              page: String(pageInput),
-              genre: genre || undefined,
-            });
+            updateSearchParam(pageInput, genre);
+            setPageInput("");
           }}
         >
           <input
@@ -237,7 +231,7 @@ function Movies() {
               setPageInput(e.target.value);
             }}
           />
-          <button className="primary-btn">Jump to</button>
+          <button className="btn-primary">Jump to</button>
         </form>
       </div>
     </main>

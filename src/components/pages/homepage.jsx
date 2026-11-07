@@ -2,8 +2,10 @@ import Hero from "../hero";
 import { useEffect, useState, useContext } from "react";
 import MovieList from "../movielist";
 import { AppContext } from "../../context/AppContext";
-import { Mail } from "lucide-react";
+import { Mail, Dot } from "lucide-react";
 import { getMovies, processData, processDetails } from "../../services/api.js";
+import CardLoading from "../loadingStates/cardLoading.jsx";
+import HeroLoading from "../loadingStates/heroLoading.jsx";
 
 function Homepage() {
   const {
@@ -23,46 +25,67 @@ function Homepage() {
   } = useContext(AppContext);
 
   const [movieDetails, setMovieDetails] = useState([]);
+  const [error, setError] = useState(null);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+  const [isAdultAnimationLoading, setIsAdultAnimationLoading] = useState(true);
+  const [isHeroDetailsLoading, setIsHeroDetailsLoading] = useState(true);
+
+  const isHomepageLoading = isCategoriesLoading || isAdultAnimationLoading;
 
   useEffect(() => {
     async function getAdultAnimatedShows() {
+      setIsAdultAnimationLoading(true);
+
       const adultShows = [];
       let page = 1;
+      let totalPages = 1;
 
-      while (adultShows.length < 20) {
-        const data = await getMovies(apiUrls.discoverTv, {
-          page,
-          with_genres: 16,
-          sort_by: "popularity.desc",
-          with_original_language: "en",
-        });
-
-        const ratingRequest = data.results.map((show) => {
-          return getMovies(`tv/${show.id}/content_ratings`);
-        });
-
-        const results = await Promise.all(ratingRequest);
-
-        results.forEach((ratingData, i) => {
-          const show = data.results[i];
-
-          const usRating = ratingData.results.find((rating) => {
-            return rating.iso_3166_1 === "US";
+      try {
+        while (adultShows.length < 20 && page <= totalPages) {
+          const data = await getMovies(apiUrls.discoverTv, {
+            page,
+            with_genres: 16,
+            sort_by: "popularity.desc",
+            with_original_language: "en",
           });
 
-          if (usRating?.rating === "TV-14" || usRating?.rating === "TV-MA") {
-            adultShows.push(show);
-          }
-        });
+          if (!data?.results?.length) break;
 
-        page++;
+          totalPages = data.total_pages ?? page;
+
+          const ratingRequest = data.results.map((show) =>
+            getMovies(`tv/${show.id}/content_ratings`),
+          );
+
+          const results = await Promise.all(ratingRequest);
+
+          results.forEach((ratingData, i) => {
+            if (!ratingData?.results) return;
+
+            const show = data.results[i];
+
+            const usRating = ratingData.results.find(
+              (rating) => rating.iso_3166_1 === "US",
+            );
+
+            if (usRating?.rating === "TV-14" || usRating?.rating === "TV-MA") {
+              adultShows.push(show);
+            }
+          });
+
+          page++;
+        }
+
+        const uniqueShows = [
+          ...new Map(adultShows.map((show) => [show.id, show])).values(),
+        ];
+
+        setAdultAnimation(processData(uniqueShows.slice(0, 20), "tv"));
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsAdultAnimationLoading(false);
       }
-
-      const uniqueShows = [
-        ...new Map(adultShows.map((show) => [show.id, show])).values(),
-      ];
-
-      setAdultAnimation(processData(uniqueShows.slice(0, 20), "tv"));
     }
 
     getAdultAnimatedShows();
@@ -73,33 +96,42 @@ function Homepage() {
      */
   useEffect(() => {
     async function fetchRawData() {
-      const popular = await getMovies(apiUrls.popularMovies, {
-        page: 1,
-      });
-      const trending = await getMovies(apiUrls.trendingMovies, {
-        page: 1,
-      });
-      const tv = await getMovies(apiUrls.popularTv, {
-        page: 1,
-      });
-      const nolly = await getMovies(apiUrls.discoverMovies, {
-        page: 1,
-        with_origin_country: "NG",
-        sort_by: "popularity.desc",
-      });
-      const japan = await getMovies(apiUrls.discoverTv, {
-        page: 1,
-        with_origin_country: "JP",
-        with_origin_language: "ja",
-        with_genres: 16,
-        sort_by: "popularity.desc",
-      });
+      try {
+        setIsCategoriesLoading(true);
+        const popular = await getMovies(apiUrls.popularMovies, {
+          page: 1,
+        });
+        const trending = await getMovies(apiUrls.trendingMovies, {
+          page: 1,
+        });
+        const tv = await getMovies(apiUrls.popularTv, {
+          page: 1,
+        });
+        const nolly = await getMovies(apiUrls.discoverMovies, {
+          page: 1,
+          with_origin_country: "NG",
+          sort_by: "popularity.desc",
+        });
+        const japan = await getMovies(apiUrls.discoverTv, {
+          page: 1,
+          with_origin_country: "JP",
+          with_origin_language: "ja",
+          with_genres: 16,
+          sort_by: "popularity.desc",
+        });
 
-      setPopularMovies(processData(popular.results, "movie"));
-      setTrendingMovies(processData(trending.results, "movie"));
-      setPopularTv(processData(tv.results, "tv"));
-      setNollywood(processData(nolly.results, "movie"));
-      setAnime(processData(japan.results, "tv"));
+        if (!popular || !trending || !tv || !nolly || !japan) throw new Error();
+
+        setPopularMovies(processData(popular.results, "movie"));
+        setTrendingMovies(processData(trending.results, "movie"));
+        setPopularTv(processData(tv.results, "tv"));
+        setNollywood(processData(nolly.results, "movie"));
+        setAnime(processData(japan.results, "tv"));
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsCategoriesLoading(false);
+      }
     }
 
     fetchRawData();
@@ -107,41 +139,54 @@ function Homepage() {
 
   /*Fetch show details */
   useEffect(() => {
-    if (!popularMovies.length) {
+    if (!trendingMovies.length) {
       return;
     }
     async function fetchRawData() {
-      const details = await getMovies(
-        trendingMovies[0].showType === "tv"
-          ? `tv/${trendingMovies[0]?.id}`
-          : `movie/${trendingMovies[0]?.id}`,
-      );
+      try {
+        setIsHeroDetailsLoading(true);
+        const details = await getMovies(
+          trendingMovies[0].showType === "tv"
+            ? `tv/${trendingMovies[0]?.id}`
+            : `movie/${trendingMovies[0]?.id}`,
+        );
 
-      setMovieDetails(
-        processDetails(details).map((item) => {
-          return (
-            <li className="detail-list" key={item.id}>
-              {item.genre}
-            </li>
-          );
-        }),
-      );
+        if (!details) throw new Error();
+
+        setMovieDetails(
+          processDetails(details).map((item) => {
+            return (
+              <li className="flex items-center text-secondary" key={item.id}>
+                <Dot size={15} />
+                {item.genre}
+              </li>
+            );
+          }),
+        );
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsHeroDetailsLoading(false);
+      }
     }
 
     fetchRawData();
   }, [popularMovies]);
 
-  if (!popularMovies.length) {
+  if (isHomepageLoading) {
     return (
       <>
-        <main className="homepage">
+        <HeroLoading />
+        <main className="bg-surface text-primary flex flex-col gap-6">
           {Array.from({ length: 6 }, (_, index) => (
-            <section className="movie-list-skeleton" key={index}>
-              <div className="skeleton-heading"></div>
+            <section key={index} className="px-4">
+              {/* Skeleton heading */}
+              <div className="h-6 w-40 bg-elevated rounded-md loading mb-4" />
 
-              <div className="skeleton-cards">
-                {Array.from({ length: 6 }, (_, cardIndex) => (
-                  <div className="skeleton-poster" key={cardIndex} />
+              {/* Skeleton posters */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {Array.from({ length: 4 }, (_, cardIndex) => (
+                  <CardLoading key={cardIndex} />
                 ))}
               </div>
             </section>
@@ -151,11 +196,9 @@ function Homepage() {
     );
   }
 
-  console.log("trendingMovies:", trendingMovies);
-
   return (
     <>
-      <main className="p-sm-fluid overflow-y-hidden border rounded-md ">
+      <main className="rounded-md flex flex-col gap-4 ">
         <Hero
           image={trendingMovies[0].backdropUrl}
           title={trendingMovies[0].title}
@@ -174,23 +217,23 @@ function Homepage() {
         <MovieList category={adultAnimation} title={"Adult Animation"} />
         <MovieList category={nollywood} title={"Nollywood Movies"} />
       </main>
-      <article className="sm:flex bg-surface border rounded-md items-center p-6 mt-6 mb-6">
-        <div className="subscribe-content flex-grow ">
-          <h3 className="text-fluid-sm">Never Miss a Movie</h3>
-          <p className="hidden sm:flex text-fluid-sm">
+      <article className="sm:flex bg-surface border border-border rounded-md flex flex-col justify-start items-start gap-2  py-3 px-4 mt-6 mb-6 text-primary sm:items-center sm:flex-row">
+        <div className="subscribe-content flex-1 flex flex-col gap-2">
+          <h3 className="text-base font-bold">Never Miss a Movie</h3>
+          <small className="hidden sm:flex text-[10px]">
             Get the latest updates on new release, trending titles and more.
-          </p>
+          </small>
         </div>
         <form className="subscribe-form flex gap-2">
-          <div className="border rounded-md bg-elevated items-center p-2 gap-2 max-w-500 w-full flex">
-            <Mail />
+          <div className="border border-border rounded-md bg-elevated items-center p-2 gap-2 max-w-500 w-full flex">
+            <Mail className="text-secondary" />
             <input
               type="text"
               className="bg-transparent border-0 text-primary w-full"
               placeholder="Enter your email address"
             />
           </div>
-          <button className="primary-btn">Subscribe</button>
+          <button className="btn-primary">Subscribe</button>
         </form>
       </article>
     </>

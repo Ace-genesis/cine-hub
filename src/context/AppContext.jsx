@@ -13,6 +13,7 @@ export const AppProvider = ({ children }) => {
   const [adultAnimation, setAdultAnimation] = useState([]);
   const [anime, setAnime] = useState([]);
   const [nollywood, setNollywood] = useState([]);
+  const [searchOutput, setSearchOutput] = useState([]);
 
   const handleSignOut = async () => {
     console.log("it reached here");
@@ -39,6 +40,7 @@ export const AppProvider = ({ children }) => {
     popularTv: "tv/popular",
     discoverMovies: "discover/movie",
     discoverTv: "discover/tv",
+    searchAll: "search/multi",
   };
 
   function scroll(direction, container) {
@@ -81,6 +83,8 @@ export const AppProvider = ({ children }) => {
         apiUrls,
         scroll,
         handleScroll,
+        searchOutput,
+        setSearchOutput,
       }}
     >
       {children}

@@ -1,9 +1,5 @@
 function CardLoading() {
-  return (
-    <div className="card loading">
-      <div className="aspect-poster w-full" />
-    </div>
-  );
+  return <div className="loading aspect-2/3 w-full rounded-md" />;
 }
 
 export default CardLoading;

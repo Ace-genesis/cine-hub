@@ -48,10 +48,14 @@ function MovieCard({ item, style }) {
   };
 
   return (
-    <>
-      {isCardLoading && <CardLoading />}
+    <div className={`card relative ${style}`}>
+      {isCardLoading && (
+        <div className="absolute inset-0">
+          <CardLoading />
+        </div>
+      )}
       <Link
-        className={`card ${style}  ${isCardLoading ? "hidden" : ""}`}
+        className={` ${isCardLoading ? "invisible" : ""}`}
         onClick={() => navigate(`/details/${item.showType}/${item.id}`)}
       >
         <div className="aspect-poster w-full" id={item.id}>
@@ -64,7 +68,7 @@ function MovieCard({ item, style }) {
           />
         </div>
       </Link>
-    </>
+    </div>
   );
 }
 

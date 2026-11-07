@@ -12,6 +12,7 @@ import { supabase } from "./lib/supabaseClient";
 import { useContext, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import HeroLoading from "./components/loadingStates/heroLoading";
+import TvShows from "./components/pages/tvShows";
 
 function AppContent() {
   const { isSignedIn, setIsSignedIn } = useContext(AppContext);
@@ -46,6 +47,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/movies" element={<Movies />} />
+            <Route path="/tv-shows" element={<TvShows />} />
             <Route path="/details/:showType/:id" element={<Details />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />

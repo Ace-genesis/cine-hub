@@ -1,21 +1,141 @@
-@import "./tokens.css";
-@import "./reset.css";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
 
-@import "./utilities/display.css";
-@import "./utilities/flexbox.css";
-@import "./utilities/spacing.css";
-@import "./utilities/sizing.css";
-@import "./utilities/typography.css";
-@import "./utilities/colors.css";
-@import "./utilities/borders.css";
-@import "./utilities/effects.css";
-@import "./utilities/positions.css";
-@import "./utilities/images.css";
-@import "./utilities/animation.css";
-@import "./utilities/grid.css";
+/* ========================================
+   CINEHUB DESIGN TOKENS
+======================================== */
 
-@import "./components.css";
-@import "./utilities/responsive.css";
-.hero {
-  height: 70dvh;
+@theme {
+  /* Brand and surfaces */
+  --color-canvas: #070d14;
+  --color-surface: #0d1621;
+  --color-elevated: #142131;
+  --color-border: #263647;
+
+  /* Brand accents */
+  --color-brand: #f21d48;
+  --color-brand-hover: #ff3b60;
+
+  /* Text */
+  --color-primary: #f5f7fa;
+  --color-secondary: #9ba8b8;
+
+  /* Status */
+  --color-success: #35c98a;
+  --color-warning: #f6b84a;
+  --color-error: #ff5a67;
+  --color-info: #4da3ff;
+
+  --text-fluid-sm: clamp(0.875rem, 0.8vw + 0.7rem, 1rem);
+  --text-fluid-base: clamp(1rem, 0.5vw + 0.9rem, 1.125rem);
+  --text-fluid-lg: clamp(1.125rem, 1vw + 0.9rem, 1.5rem);
+  --text-fluid-xl: clamp(1.5rem, 1.5vw + 1rem, 2rem);
+  --text-fluid-2xl: clamp(2rem, 2vw + 1rem, 3rem);
+
+  /* Shimmer animation */
+  --animate-shimmer: shimmer 1.5s infinite linear;
+
+  @keyframes shimmer {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: -100% 0;
+    }
+  }
+
+  /* Spinner animation */
+  --animate-spin: spin 1s linear infinite;
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-canvas;
+  }
+  button {
+    @apply cursor-pointer active:scale-[0.99] flex items-center justify-center;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand border-0 rounded-md text-primary px-2 transition-all duration-150 hover:bg-brand-hover disabled:text-secondary disabled:border disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-secondary {
+    @apply bg-white/10
+  backdrop-blur-md
+  border border-white/20
+  text-primary
+  rounded-md
+  px-5 py-2.5
+  shadow-lg
+  hover:bg-white/20
+  transition-all duration-200;
+  }
+
+  .card {
+    @apply h-auto rounded-md border border-border;
+  }
+
+  .carousel-card {
+    @apply w-[clamp(100px,17vw,400px)] snap-start shrink-0;
+  }
+
+  .grid-card {
+    @apply w-full;
+  }
+  .loading {
+    @apply animate-shimmer bg-[linear-gradient(90deg,#0d1621_25%,#182635_50%,#0d1621_75%)] bg-size-[200%_100%];
+  }
+}
+
+/* ========================================
+   CUSTOM TOKENS NOT COVERED BY @THEME
+======================================== */
+
+:root {
+  /* Status backgrounds and borders */
+  --success-bg: rgb(53 201 138 / 12%);
+  --success-border: rgb(53 201 138 / 30%);
+
+  --warning-bg: rgb(246 184 74 / 12%);
+  --warning-border: rgb(246 184 74 / 30%);
+
+  --error-bg: rgb(255 90 103 / 12%);
+  --error-border: rgb(255 90 103 / 30%);
+
+  --info-bg: rgb(77 163 255 / 12%);
+  --info-border: rgb(77 163 255 / 30%);
+
+  /* Layout */
+  --container-max: 1440px;
+  --page-gutter: 24px;
+
+  /* Fluid spacing */
+  --space-fluid-sm: clamp(8px, 1vw, 16px);
+  --space-fluid-md: clamp(0.5rem, 1vw, 2rem);
+  --space-fluid-lg: clamp(16px, 3vw, 48px);
+
+  /* Fluid typography */
+  --text-fluid-sm: clamp(0.7rem, 1vw, 1rem);
+  --text-fluid-base: clamp(1.2rem, 2.5vw, 2rem);
+  --text-fluid-lg: clamp(2.5rem, 2vw, 5rem);
+
+  --page-gutter-fluid: clamp(16px, 3vw, 40px);
+
+  /* Effects */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* Interactive states */
+  --disabled-opacity: 0.5;
+  --focus-color: #4da3ff;
+  --focus-ring: 0 0 0 3px rgb(77 163 255 / 20%);
 }
