@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import CardLoading from "./loadingStates/cardLoading";
 
-function MovieCard({ item, style }) {
+function MovieCard({ item, style, children }) {
   const [isCardLoading, setIsCardLoading] = useState(true);
   const { myList, setMyList, isSignedIn, getMovies } = useContext(AppContext);
 
@@ -60,14 +60,18 @@ function MovieCard({ item, style }) {
       >
         <div className="aspect-2/3 w-full" id={item.id}>
           <img
-            src={item.url}
-            alt={item.title}
+            src={
+              item.url ||
+              `https://image.tmdb.org/t/p/w1280/${item.profile_path}`
+            }
+            alt={item.title || item.name}
             className="aspect-2/3 rounded-md"
             onLoad={() => setIsCardLoading(false)}
             onError={() => setIsCardLoading(false)}
           />
         </div>
       </Link>
+      {children}
     </div>
   );
 }

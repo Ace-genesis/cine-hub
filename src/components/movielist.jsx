@@ -10,7 +10,14 @@ function MovieList({ category, title }) {
   const { scroll, handleScroll } = useContext(AppContext);
 
   const movieList = category.map((item) => {
-    return <MovieCard key={item.id} item={item} style="carousel-card" />;
+    return (
+      <MovieCard key={item.id} item={item} style="carousel-card">
+        <div className={`flex flex-col ${item.character && "py-2"}`}>
+          <p className="text-[0.8rem]">{item.name}</p>
+          <p className="text-secondary text-xs">{item.character}</p>
+        </div>
+      </MovieCard>
+    );
   });
 
   return (
@@ -22,7 +29,7 @@ function MovieList({ category, title }) {
         {canScrollLeft && (
           <button
             onClick={() => scroll("left", movieContainer)}
-            className="absolute -left-1 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center bg-transparent border-0 "
+            className="absolute -left-1 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center bg-transparent border-0 z-10"
           >
             <CircleArrowLeft
               size={50}

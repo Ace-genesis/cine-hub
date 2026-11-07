@@ -61,11 +61,15 @@
   button {
     @apply cursor-pointer active:scale-[0.99] flex;
   }
+
+  li {
+    @apply list-none;
+  }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-brand border-0 rounded-md text-primary px-2 transition-all duration-150 hover:bg-brand-hover disabled:text-secondary disabled:border disabled:opacity-50 disabled:pointer-events-none;
+    @apply bg-brand border-0 items-center justify-center rounded-md text-primary px-2 transition-all duration-150 hover:bg-brand-hover disabled:text-secondary disabled:border disabled:opacity-50 disabled:pointer-events-none;
   }
 
   .btn-secondary {
@@ -73,6 +77,8 @@
   backdrop-blur-md
   border border-white/20
   text-primary
+  items-center
+  justify-center
   rounded-md
   px-5 py-2.5
   shadow-lg

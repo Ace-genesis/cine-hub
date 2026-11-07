@@ -1,17 +1,14 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Play, Plus } from "lucide-react";
+import { useState } from "react";
 import HeroLoading from "./loadingStates/heroLoading.jsx";
 
-function Hero({ image, title, year, runtime, details, overview }) {
+function Hero({ image, title, children }) {
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   return (
     <>
       {isLoading && <HeroLoading />}
       <section
-        className={`relative rounded-md text-primary flex flex-col  min-h-[50dvh] sm:min-h-[70dvh]  mb-6 mt-2 ${isLoading ? "hidden" : ""}`}
+        className={`relative rounded-md text-primary flex flex-col  min-h-[50dvh] sm:min-h-[60dvh]  mb-6 mt-2 ${isLoading ? "hidden" : ""}`}
       >
         <picture className="absolute inset-0 z-0 h-full w-full overflow-hidden rounded-md">
           <img
@@ -19,11 +16,11 @@ function Hero({ image, title, year, runtime, details, overview }) {
             alt={title}
             onLoad={() => setIsLoading(false)}
             onError={() => console.log("Image failed to load")}
-            className="h-full w-full aspect-poster rounded-md object-cover"
+            className="h-full w-full rounded-md object-cover object-top"
           />
         </picture>
         <div
-          className="absolute inset-0 z-[1] rounded-md"
+          className="absolute inset-0 z-1 rounded-md"
           style={{
             background: `
       linear-gradient(
@@ -39,7 +36,7 @@ function Hero({ image, title, year, runtime, details, overview }) {
         />
         {/* Bottom gradient */}
         <div
-          className="absolute inset-0 z-[2] rounded-md pointer-events-none"
+          className="absolute inset-0 z-2 rounded-md pointer-events-none"
           style={{
             background: `
       linear-gradient(
@@ -53,29 +50,7 @@ function Hero({ image, title, year, runtime, details, overview }) {
           }}
         />
 
-        <p className="text-brand relative flex-1 px-4 z-[2]">#1 Trending</p>
-        <article className="relative z-10 w-full md:w-80 p-4 flex flex-col gap-4">
-          <h2 className="text-4xl md:text-6xl  ">{title}</h2>
-
-          <section className="flex text-xs gap-2">
-            <small className="text-secondary">{year}</small>
-            <small>{runtime}</small>
-            <small className="flex gap-2">{details}</small>
-          </section>
-          <section className="text-fluid-sm line-clamp-2">{overview}</section>
-          <footer className="flex gap-4 ">
-            <button
-              className="btn-primary items-center"
-              onClick={() => navigate(`/details/${item.showType}/${item.id}`)}
-            >
-              <Play />
-              Play Now
-            </button>
-            <button className="btn-secondary">
-              <Plus /> My List
-            </button>
-          </footer>
-        </article>
+        {children}
       </section>
     </>
   );

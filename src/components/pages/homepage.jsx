@@ -2,7 +2,7 @@ import Hero from "../hero";
 import { useEffect, useState, useContext } from "react";
 import MovieList from "../movielist";
 import { AppContext } from "../../context/AppContext";
-import { Mail, Dot } from "lucide-react";
+import { Mail, Dot, Play, Plus } from "lucide-react";
 import { getMovies, processData, processDetails } from "../../services/api.js";
 import CardLoading from "../loadingStates/cardLoading.jsx";
 import HeroLoading from "../loadingStates/heroLoading.jsx";
@@ -202,13 +202,36 @@ function Homepage() {
   return (
     <>
       <main className="rounded-md flex flex-col gap-4 ">
-        <Hero
-          image={trendingMovies[0].backdropUrl}
-          title={trendingMovies[0].title}
-          year={trendingMovies[0].releaseDate.split("-")[0]}
-          details={movieDetails}
-          overview={trendingMovies[0].overview}
-        />
+        <Hero image={trendingMovies[0].backdropUrl}>
+          <p className="text-brand relative flex-1 px-4 z-[2]">#1 Trending</p>
+          <article className="relative z-10 w-full md:w-80 p-4 flex flex-col gap-4">
+            <h2 className="text-4xl md:text-6xl  ">
+              {trendingMovies[0].title}
+            </h2>
+
+            <section className="flex text-xs gap-2">
+              <small className="text-secondary">
+                {trendingMovies[0].releaseDate.split("-")[0]}
+              </small>
+              <small className="flex gap-2">{movieDetails}</small>
+            </section>
+            <section className="text-fluid-sm line-clamp-2">
+              {trendingMovies[0].overview}
+            </section>
+            <footer className="flex gap-4 ">
+              <button
+                className="btn-primary items-center"
+                onClick={() => navigate(`/details/${item.showType}/${item.id}`)}
+              >
+                <Play />
+                Play Now
+              </button>
+              <button className="btn-secondary">
+                <Plus /> My List
+              </button>
+            </footer>
+          </article>
+        </Hero>
         <MovieList category={trendingMovies} title={"Trending"} />
         <MovieList
           category={popularMovies}
