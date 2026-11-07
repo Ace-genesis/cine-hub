@@ -177,11 +177,11 @@ function Homepage() {
     return (
       <>
         <HeroLoading />
-        <main className="bg-surface text-primary flex flex-col gap-6 ">
+        <main className="bg-surface text-primary flex flex-col gap-6 mt-10">
           {Array.from({ length: 6 }, (_, index) => (
-            <section key={index} className="px-4 ">
+            <section key={index} className=" py-1 flex flex-col gap-2">
               {/* Skeleton heading */}
-              <div className="h-6 w-40 bg-elevated rounded-md loading mb-4" />
+              <div className="h-6 w-40 bg-elevated rounded-md loading " />
 
               {/* Skeleton posters */}
               <div className="flex gap-4 overflow-x-hidden ">
