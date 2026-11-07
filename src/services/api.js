@@ -10,6 +10,7 @@ export const getMovies = async (apiLink, params = {}) => {
     return response.json();
   } catch (error) {
     console.log(error);
+    throw error;
   }
 };
 

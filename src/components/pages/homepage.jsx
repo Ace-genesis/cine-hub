@@ -177,16 +177,19 @@ function Homepage() {
     return (
       <>
         <HeroLoading />
-        <main className="bg-surface text-primary flex flex-col gap-6">
+        <main className="bg-surface text-primary flex flex-col gap-6 ">
           {Array.from({ length: 6 }, (_, index) => (
-            <section key={index} className="px-4">
+            <section key={index} className="px-4 ">
               {/* Skeleton heading */}
               <div className="h-6 w-40 bg-elevated rounded-md loading mb-4" />
 
               {/* Skeleton posters */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="flex gap-4 overflow-x-hidden ">
                 {Array.from({ length: 4 }, (_, cardIndex) => (
-                  <CardLoading key={cardIndex} />
+                  <CardLoading
+                    key={cardIndex}
+                    style="w-[clamp(100px,17vw,400px)]"
+                  />
                 ))}
               </div>
             </section>

@@ -8,11 +8,35 @@ import { Link } from "react-router-dom";
 import { processData, getMovies } from "../../services/api.js";
 
 function MyList() {
-  const { myList, setMyList, isSignedIn, trendingMovies } =
-    useContext(AppContext);
+  const { myList, setMyList, isSignedIn, apiUrls } = useContext(AppContext);
+  const [trendingMovies, setTrendingMovies] = useState([]);
+  const [isTrendingListLoading, setIsTrendingListLoading] = useState(true);
   const [error, setError] = useState("");
 
-  console.log("trendingMovies MyList:", trendingMovies);
+  useEffect(() => {
+    async function fetchRawData() {
+      try {
+        setIsTrendingListLoading(true);
+
+        const trending = await getMovies(apiUrls.trendingMovies, {
+          page: 1,
+        });
+
+        console.log("Trending: ", trending);
+
+        if (!trending) throw new Error("No trending movies found");
+
+        setTrendingMovies(processData(trending.results, "movie"));
+      } catch (error) {
+        setError("Could not fetch Shows");
+        console.log(error.message);
+      } finally {
+        setIsTrendingListLoading(false);
+      }
+    }
+
+    fetchRawData();
+  }, []);
 
   useEffect(() => {
     const retrieveMyList = async () => {
@@ -59,25 +83,29 @@ function MyList() {
   return isSignedIn ? (
     <div className="popular-movies my-list">{movieList}</div>
   ) : (
-    <main className="border rounded-md p-4">
-      <h2>My List</h2>
-      <section className="flex flex-col items-center justify-center gap-4 p-8 border rounded-md bg-surface">
-        <div className="flex flex-col items-center gap-4">
-          <Bookmark
-            size={90}
-            strokeWidth={1}
-            className="border rounded-full bg-elevated p-4"
-          />
-          <div className="flex flex-col items-center gap-2">
-            <h3>Your List is Empty</h3>
-            <p>Add some movies to your list to see them here.</p>
+    <main className="border border-border rounded-md p-4 text-primary flex flex-col gap-4">
+      <article>
+        <h2>My List</h2>
+        <section className="flex flex-col items-center justify-center gap-4 p-8 border border-border rounded-md bg-surface">
+          <div className="flex flex-col items-center gap-4">
+            <Bookmark
+              size={90}
+              strokeWidth={1}
+              className="border rounded-full bg-elevated p-4"
+            />
+            <div className="flex flex-col items-center gap-2">
+              <h3>Your List is Empty</h3>
+              <p>Add some movies to your list to see them here.</p>
+            </div>
+            <Link to={"/"} className="btn-primary p-2">
+              Browse Shows
+            </Link>
           </div>
-          <Link to={"/"} className="primary-btn">
-            Browse Shows
-          </Link>
-        </div>
+        </section>
+      </article>
+      <section>
+        <MovieList category={trendingMovies} title={"Recommended for you"} />
       </section>
-      <MovieList category={trendingMovies} title={"Recommended for you"} />
     </main>
   );
 }

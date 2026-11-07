@@ -25,7 +25,12 @@ function Footer() {
             </Link>
             <div className="flex gap-2 items-center">
               {Icons.map((item) => (
-                <a href={item.id} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={item.id}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  key={item.platform}
+                >
                   <SocialIcon
                     platform={item.platform}
                     background="var(--color-elevated)"
@@ -118,18 +123,18 @@ function Footer() {
                 </small>
               </div>
               <div className="gap-2 hidden sm:flex">
-                <button className="flex px-3  border border-border rounded-md bg-canvasitems-center text-primary">
+                <button className="flex px-3  border border-border rounded-md bg-canvas items-center text-primary">
                   <GooglePlayIcon size={50} />
-                  <div className="flex flex-col">
+                  <div className="flex flex-col items-center justify-center">
                     <small className="text-[10px] text-secondary">
                       get it on
                     </small>
                     <p className="font-semibold text-sm">Google Play</p>
                   </div>
                 </button>
-                <button className="flex border border-border px-3 rounded-md bg-canvas items-center text-primary">
+                <button className="flex px-3  border border-border rounded-md bg-canvas items-center text-primary">
                   <SocialIcon platform="appstore" size={25} />
-                  <div>
+                  <div className="flex flex-col items-center justify-center">
                     <small className="text-[8px] text-secondary">
                       Download on the
                     </small>

@@ -10,6 +10,7 @@ import MovieList from "../movielist";
 import MovieCard from "../movieCard";
 import { useSearchParams } from "react-router-dom";
 import { CircleArrowLeft, CircleArrowRight } from "lucide-react";
+import CardLoading from "../loadingStates/cardLoading.jsx";
 
 function Movies() {
   const [allMovies, setAllMovies] = useState([]);
@@ -26,25 +27,47 @@ function Movies() {
   const genre = searchParams.get("genre") || undefined;
 
   const [pageInput, setPageInput] = useState("");
+  const [isShowLoading, setIsShowLoading] = useState(true);
+  const [isGenreLoading, setIsGenreLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function fetchRawData() {
-      const allMoviesList = await getMovies(apiUrls.discoverMovies, {
-        page: currentPage,
-        sort_by: "popularity.desc",
-        with_genres: genre || undefined,
-      });
+    setIsShowLoading(true);
 
-      setAllMovies(processData(allMoviesList.results, "movie"));
-      setTotalPages(Math.min(allMoviesList.total_pages, maxApiPages));
+    async function fetchRawData() {
+      try {
+        const allMoviesList = await getMovies(apiUrls.discoverMovies, {
+          page: currentPage,
+          sort_by: "popularity.desc",
+          with_genres: genre || undefined,
+        });
+
+        if (!allMoviesList) throw new Error();
+
+        setAllMovies(processData(allMoviesList.results, "movie"));
+        setTotalPages(Math.min(allMoviesList.total_pages, maxApiPages));
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsShowLoading(false);
+      }
     }
     fetchRawData();
   }, [currentPage, genre]);
 
   useEffect(() => {
     async function fetchGenres() {
-      const fetchedGenres = await getMovies("genre/movie/list");
-      setMovieGenres(processDetails(fetchedGenres));
+      setIsGenreLoading(true);
+      try {
+        const fetchedGenres = await getMovies("genre/movie/list");
+
+        if (!fetchedGenres) throw new Error();
+        setMovieGenres(processDetails(fetchedGenres));
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsGenreLoading(false);
+      }
     }
 
     fetchGenres();
@@ -65,6 +88,127 @@ function Movies() {
     }
 
     setSearchParams(params);
+  }
+
+  if (isShowLoading) {
+    return (
+      <>
+        <section className="bg-transparent  flex flex-col  relative py-2 ">
+          {canScrollLeft && (
+            <button
+              onClick={() => scroll("left", movieContainer)}
+              className="absolute -left-1 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center bg-transparent border-0 "
+            >
+              <CircleArrowLeft
+                size={25}
+                color="var(--color-primary)"
+                fill="var(--color-canvas)"
+                strokeWidth={1}
+                className="opacity-60 "
+              />
+            </button>
+          )}
+          <ul
+            className="flex overflow-x-auto gap-4  list-none  overflow-x-auto  scrollbar-none snap-x text-primary"
+            ref={movieContainer}
+            onScroll={() =>
+              handleScroll(movieContainer, setCanScrollLeft, setCanScrollRight)
+            }
+          >
+            <li
+              className="cursor-pointer flex items-center justify-center px-4 text-xs"
+              onClick={() => {
+                setPageInput("");
+                updateSearchParam(1);
+              }}
+            >
+              All
+            </li>
+            {movieGenres.map((item) => {
+              return (
+                <li
+                  className="cursor-pointer flex items-center justify-center px-2 text-xs snap"
+                  key={item.id}
+                  onClick={() => {
+                    setPageInput("");
+                    updateSearchParam(1, item.id);
+                  }}
+                >
+                  {item.genre}
+                </li>
+              );
+            })}
+          </ul>
+          {canScrollRight && (
+            <button
+              onClick={() => scroll("right", movieContainer)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center bg-transparent  "
+            >
+              <CircleArrowRight
+                size={25}
+                color="var(--color-primary)"
+                fill="var(--color-canvas)"
+                strokeWidth={1}
+                className="opacity-60 "
+              />
+            </button>
+          )}
+        </section>
+        <div className="flex flex-col justify-center items-center gap-4 p-4 text-primary">
+          <div className="flex justify-center items-center gap-4 p-4">
+            <button
+              className={`${currentPage === 1 ? "hidden" : "btn-primary"}`}
+              onClick={() => {
+                if (currentPage > 1) {
+                  updateSearchParam(currentPage - 1, genre);
+                }
+              }}
+            >
+              Prev
+            </button>
+            <p>
+              {currentPage} of {totalPages}
+            </p>
+            <button
+              className={`${currentPage === totalPages ? "hidden" : "btn-primary"}`}
+              onClick={() => {
+                if (currentPage < totalPages) {
+                  updateSearchParam(currentPage + 1, genre);
+                }
+              }}
+            >
+              Next
+            </button>
+          </div>
+
+          <form
+            className="flex justify-center items-center gap-4 p-4 "
+            onSubmit={(e) => {
+              e.preventDefault();
+              updateSearchParam(pageInput, genre);
+              setPageInput("");
+            }}
+          >
+            <input
+              type="number"
+              min="1"
+              max={totalPages}
+              className="bg-elevated rounded-md border-0 p-2 text-primary w-20"
+              value={pageInput}
+              onChange={(e) => {
+                setPageInput(e.target.value);
+              }}
+            />
+            <button className="btn-primary">Jump to</button>
+          </form>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4">
+          {Array.from({ length: 20 }, (_, index) => (
+            <CardLoading key={index} style="grid-card" />
+          ))}
+        </div>
+      </>
+    );
   }
 
   return (

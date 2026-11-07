@@ -55,14 +55,14 @@ function MovieCard({ item, style }) {
         </div>
       )}
       <Link
-        className={` ${isCardLoading ? "invisible" : ""}`}
+        className={` block ${isCardLoading ? "invisible" : ""}`}
         onClick={() => navigate(`/details/${item.showType}/${item.id}`)}
       >
-        <div className="aspect-poster w-full" id={item.id}>
+        <div className="aspect-2/3 w-full" id={item.id}>
           <img
             src={item.url}
             alt={item.title}
-            className="card-image aspect-poster rounded-md"
+            className="aspect-2/3 rounded-md"
             onLoad={() => setIsCardLoading(false)}
             onError={() => setIsCardLoading(false)}
           />
