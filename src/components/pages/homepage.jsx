@@ -30,6 +30,8 @@ function Homepage() {
   const [isAdultAnimationLoading, setIsAdultAnimationLoading] = useState(true);
   const [isHeroDetailsLoading, setIsHeroDetailsLoading] = useState(true);
 
+  const [nowPlaying, setNowPlaying] = useState([]);
+
   const isHomepageLoading = isCategoriesLoading || isAdultAnimationLoading;
 
   useEffect(() => {
@@ -120,9 +122,15 @@ function Homepage() {
           with_genres: 16,
           sort_by: "popularity.desc",
         });
+        const playing = await getMovies(apiUrls.nowPlaying, {
+          page: 1,
+        });
 
         if (!popular || !trending || !tv || !nolly || !japan) throw new Error();
 
+        console.log("now_playing: ", playing);
+
+        setNowPlaying(processData(playing.results, "movie"));
         setPopularMovies(processData(popular.results, "movie"));
         setTrendingMovies(processData(trending.results, "movie"));
         setPopularTv(processData(tv.results, "tv"));
@@ -240,6 +248,7 @@ function Homepage() {
           showType={"movie"}
         />
         <MovieList category={popularTv} title={"Popular Series"} />
+        <MovieList category={nowPlaying} title={"Recently Released"} />
         <MovieList category={anime} title={"Anime"} />
         <MovieList category={adultAnimation} title={"Adult Animation"} />
         <MovieList category={nollywood} title={"Nollywood Movies"} />
