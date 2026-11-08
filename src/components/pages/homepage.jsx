@@ -111,6 +111,7 @@ function Homepage() {
           page: 1,
           with_origin_country: "NG",
           sort_by: "popularity.desc",
+          "primary_release_date.gte": "2026-01-01",
         });
         const japan = await getMovies(apiUrls.discoverTv, {
           page: 1,
