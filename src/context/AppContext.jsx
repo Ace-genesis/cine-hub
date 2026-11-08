@@ -42,6 +42,8 @@ export const AppProvider = ({ children }) => {
     discoverTv: "discover/tv",
     searchAll: "search/multi",
     nowPlaying: "movie/now_playing",
+    topRatedMovies: "movie/top_rated",
+    topRatedTv: "tv/top_rated",
   };
 
   function scroll(direction, container) {

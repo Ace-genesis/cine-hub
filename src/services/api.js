@@ -46,4 +46,26 @@ export function processData(state, defaultType) {
   });
 }
 
+export async function filterList(url, params) {
+  const list = [];
+  let page = 1;
+  let totalPage = 1;
+
+  while (list.length < 20 && page <= totalPage) {
+    const data = await getMovies(url, { ...params, page: page });
+
+    if (!data?.results?.length) break;
+
+    totalPage = data.total_pages ?? page;
+
+    const newResult = data.results.filter((item) => item.poster_path);
+
+    newResult.forEach((item) => list.push(item));
+
+    page++;
+  }
+
+  return list;
+}
+
 export const maxApiPages = 500;

@@ -42,7 +42,7 @@ function MovieList({ category, title }) {
         )}
 
         <div
-          className="flex gap-4 overflow-x-auto  scrollbar-none snap-x  "
+          className="flex gap-2 overflow-x-auto  scrollbar-none snap-x  "
           ref={movieContainer}
           onScroll={() =>
             handleScroll(movieContainer, setCanScrollLeft, setCanScrollRight)

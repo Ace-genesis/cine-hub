@@ -95,7 +95,7 @@
   }
 
   .carousel-card {
-    @apply w-[clamp(100px,17vw,400px)] snap-start shrink-0;
+    @apply w-[clamp(100px,15.2vw,400px)] snap-start shrink-0;
   }
 
   .grid-card {

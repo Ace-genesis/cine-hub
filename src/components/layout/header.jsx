@@ -101,7 +101,7 @@ function Header() {
             <input
               type="text"
               placeholder="Search for movies, TV Shows, actors..."
-              className="bg-transparent border-0 focus:outline-none text-primary w-full p-2 opacity-30"
+              className="bg-transparent border-0 focus:outline-none text-primary w-full p-2 opacity-30 sm:opacity-100"
               id="search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -130,9 +130,6 @@ function Header() {
             </button>
           </div>
         </div>
-        {/*<button className="bg-transparent border-0 text-primary sm:hidden">
-        <Menu />
-      </button>*/}
       </header>
     </>
   );

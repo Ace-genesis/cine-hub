@@ -3,7 +3,12 @@ import { useEffect, useState, useContext } from "react";
 import MovieList from "../movielist";
 import { AppContext } from "../../context/AppContext";
 import { Mail, Dot, Play, Plus } from "lucide-react";
-import { getMovies, processData, processDetails } from "../../services/api.js";
+import {
+  getMovies,
+  processData,
+  processDetails,
+  filterList,
+} from "../../services/api.js";
 import CardLoading from "../loadingStates/cardLoading.jsx";
 import HeroLoading from "../loadingStates/heroLoading.jsx";
 
@@ -31,6 +36,9 @@ function Homepage() {
   const [isHeroDetailsLoading, setIsHeroDetailsLoading] = useState(true);
 
   const [nowPlaying, setNowPlaying] = useState([]);
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
+  const [topRatedTv, setTopRatedTv] = useState([]);
+  const [hiddenGems, SetHiddenGems] = useState([]);
 
   const isHomepageLoading = isCategoriesLoading || isAdultAnimationLoading;
 
@@ -100,42 +108,62 @@ function Homepage() {
     async function fetchRawData() {
       try {
         setIsCategoriesLoading(true);
-        const popular = await getMovies(apiUrls.popularMovies, {
+
+        const today = new Date().toISOString().split("T")[0];
+
+        const popular = await filterList(apiUrls.popularMovies, {
           page: 1,
         });
-        const trending = await getMovies(apiUrls.trendingMovies, {
+
+        const trending = await filterList(apiUrls.trendingMovies, {
           page: 1,
         });
-        const tv = await getMovies(apiUrls.popularTv, {
+        const tv = await filterList(apiUrls.popularTv, {
           page: 1,
         });
-        const nolly = await getMovies(apiUrls.discoverMovies, {
+        const nolly = await filterList(apiUrls.discoverMovies, {
           page: 1,
           with_origin_country: "NG",
           sort_by: "popularity.desc",
           "primary_release_date.gte": "2026-01-01",
         });
-        const japan = await getMovies(apiUrls.discoverTv, {
+
+        const japan = await filterList(apiUrls.discoverTv, {
           page: 1,
           with_origin_country: "JP",
           with_origin_language: "ja",
           with_genres: 16,
           sort_by: "popularity.desc",
         });
-        const playing = await getMovies(apiUrls.nowPlaying, {
+        const playing = await filterList(apiUrls.nowPlaying, {
           page: 1,
+        });
+        const ratedMovies = await filterList(apiUrls.topRatedMovies, {
+          page: 1,
+        });
+        const ratedTv = await filterList(apiUrls.topRatedTv, {
+          page: 1,
+        });
+
+        const gems = await filterList(apiUrls.discoverMovies, {
+          page: 1,
+          sort_by: "vote_average.desc",
+          "vote_count.gte": 100,
+          "vote_count.lte": 1000,
+          "primary_release_date.lte": today,
         });
 
         if (!popular || !trending || !tv || !nolly || !japan) throw new Error();
 
-        console.log("now_playing: ", playing);
-
-        setNowPlaying(processData(playing.results, "movie"));
-        setPopularMovies(processData(popular.results, "movie"));
-        setTrendingMovies(processData(trending.results, "movie"));
-        setPopularTv(processData(tv.results, "tv"));
-        setNollywood(processData(nolly.results, "movie"));
-        setAnime(processData(japan.results, "tv"));
+        SetHiddenGems(processData(gems, "movie").slice(0, 20));
+        setTopRatedTv(processData(ratedTv, "tv").slice(0, 20));
+        setTopRatedMovies(processData(ratedMovies, "movie").slice(0, 20));
+        setNowPlaying(processData(playing, "movie").slice(0, 20));
+        setPopularMovies(processData(popular, "movie").slice(0, 20));
+        setTrendingMovies(processData(trending, "movie").slice(0, 20));
+        setPopularTv(processData(tv, "tv").slice(0, 20));
+        setNollywood(processData(nolly, "movie").slice(0, 20));
+        setAnime(processData(japan, "tv").slice(0, 20));
       } catch (error) {
         setError(error.message);
       } finally {
@@ -212,7 +240,7 @@ function Homepage() {
     <>
       <main className="rounded-md flex flex-col gap-4 ">
         <Hero image={trendingMovies[0].backdropUrl}>
-          <p className="text-brand relative flex-1 px-4 z-[2]">#1 Trending</p>
+          <p className="text-brand relative flex-1 px-4 z-2">#1 Trending</p>
           <article className="relative z-10 w-full md:w-80 p-4 flex flex-col gap-4">
             <h2 className="text-4xl md:text-6xl  ">
               {trendingMovies[0].title}
@@ -251,7 +279,10 @@ function Homepage() {
         <MovieList category={nowPlaying} title={"Recently Released"} />
         <MovieList category={anime} title={"Anime"} />
         <MovieList category={adultAnimation} title={"Adult Animation"} />
+        <MovieList category={hiddenGems} title={"Hidden Gems"} />
         <MovieList category={nollywood} title={"Nollywood Movies"} />
+        <MovieList category={topRatedMovies} title={"Top Rated Movies"} />
+        <MovieList category={topRatedTv} title={"Top Rated Series"} />
       </main>
       <article className="sm:flex bg-surface border border-border rounded-md flex flex-col justify-start items-start gap-2  py-3 px-4 mt-6 mb-6 text-primary sm:items-center sm:flex-row">
         <div className="subscribe-content flex-1 flex flex-col gap-2">
