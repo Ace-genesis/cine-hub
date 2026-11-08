@@ -13,7 +13,7 @@ function Header() {
   useEffect(() => {
     async function fetchSearchResults() {
       const result = await getMovies("search/multi", { query: searchInput });
-      setSearchOutput(processData(result.results).slice(0, 10));
+      setSearchOutput(processData(result.results));
     }
 
     fetchSearchResults();
@@ -22,21 +22,18 @@ function Header() {
   function SearchItem({ item }) {
     return (
       <Link
-        onClick={() => {
-          setSearchInput("");
-          console.log("pathname: ", `/details/${item.showType}/${item.id}`);
-          navigate(`/details/${item.showType}/${item.id}`);
-        }}
-        className="flex gap-2 items-center justify-start item rounded-md p-2"
+        to={`/details/${item.showType}/${item.id}`}
+        onClick={() => setSearchInput("")}
+        className="flex gap-2 items-center justify-start item rounded-md p-2 hover:bg-surface"
       >
-        <picture className="w-12  rounded-md ">
+        <picture className="w-20  rounded-md ">
           <img src={item.url} alt={item.title} className="rounded-md w-full" />
         </picture>
 
         <div>
-          <h2 className="text-fluid-sm">{item.title}</h2>
+          <h2 className="text-base">{item.title}</h2>
 
-          <small className="text-fluid-sm text-secondary flex gap-1 px-1 items-center">
+          <small className="text-sm text-secondary flex gap-1 px-1 items-center">
             <p>{item.releaseDate?.split("-")[0]}</p>
             <Dot size={10} />
             <p className="relative">{item.showType}</p>
@@ -48,7 +45,14 @@ function Header() {
 
   function SearchModal() {
     return (
-      <section className="bg-elevated w-full absolute top-12 p-2 rounded-md flex flex-col gap-2">
+      <section
+        className="bg-elevated w-full h-[80dvh] absolute top-12 p-2 rounded-md overflow-y-auto flex flex-col gap-2
+
+        scrollbar-thin scrollbar-thumb-[#344454]
+        scrollbar-track-transparent
+      
+      max-sm:scrollbar-none"
+      >
         {searchOutput.map((item) => {
           return <SearchItem key={item.id} item={item} />;
         })}
@@ -58,7 +62,7 @@ function Header() {
 
   return (
     <>
-      <header className="flex p-md-fluid items-center justify-between bg-canvas sticky top-0 z-50 text-primary py-4 px-3">
+      <header className="flex p-md-fluid items-center justify-between bg-canvas sticky top-0 z-50 text-primary py-4 px-3 ">
         <Link to={"/"} className="md:hidden flex gap-2">
           <Play fill="var(--color-brand)" color="var(--color-brand)" />
           <h1 className="text-xl font-bold">
@@ -67,16 +71,47 @@ function Header() {
         </Link>
 
         <div className="max-w-700 relative -right-12 md:right-auto md:w-full sm:px-6 ">
-          <div className="md:border border-border w-9 h-9 rounded-full bg-transparent md:bg-elevated items-center focus-within:outline-1  gap-2 relative md:w-auto md:h-auto  md:flex sm:rounded-md  ">
+          <div
+            className="
+           border-border w-9 h-9 
+           rounded-full bg-transparent  
+           items-center  gap-2 relative 
+           
+           focus-within:absolute
+            focus-within:-left-52
+            focus-within:-top-5
+            focus-within:w-[90dvw]
+            focus-within:h-12
+            focus-within:rounded-full
+            focus-within:bg-elevated
+
+             sm:focus-within:relative
+            sm:focus-within:left-auto
+            sm:focus-within:top-auto
+            sm:focus-within:w-auto
+            sm:focus-within:h-auto
+            sm:focus-within:rounded-md
+            sm:focus-within:bg-elevated
+           
+           md:bg-elevated  
+           md:w-auto md:border
+            md:h-auto md:flex 
+            sm:rounded-md z-50"
+          >
             <input
               type="text"
               placeholder="Search for movies, TV Shows, actors..."
               className="bg-transparent border-0 focus:outline-none text-primary w-full p-2 opacity-30"
+              id="search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
             />
-
-            <Search className="w-6 h-6 md:w-5 md:h-5 bg-transparent absolute top-1/2 -translate-y-1/2  right-2 text-secondary flex items-center justify-center md:top-auto md:translate-y-0" />
+            <label
+              htmlFor="search"
+              className="w-6 h-6 md:w-5 md:h-5 bg-transparent absolute top-1/2 -translate-y-1/2  right-2 text-secondary flex items-center justify-center md:top-auto md:translate-y-0"
+            >
+              <Search />
+            </label>
 
             {searchInput && <SearchModal />}
           </div>

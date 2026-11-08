@@ -19,6 +19,7 @@ function Details() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showCast, setShowCast] = useState([]);
   const [showTrailer, setShowTrailer] = useState(null);
+  const [similarShows, setSimilarShows] = useState([]);
 
   const activeTab = searchParams.get("tab") || "Overview";
 
@@ -30,24 +31,50 @@ function Details() {
     const fetchDetails = async () => {
       try {
         const details = await getMovies(`${showType}/${id}`, {
-          append_to_response: "credits,videos",
+          append_to_response: "credits,videos,similar",
         });
 
         console.log("details: ", details);
         if (!details) throw new Error();
         setGenres(processDetails(details));
-        const trailer = details.videos.results.find((item) => {
-          return (
-            item.site === "YouTube" &&
-            item.type === "Trailer" &&
-            item.name === "Official Trailer"
-          );
-        });
+
+        const trailer =
+          details.videos.results.find((item) => {
+            return (
+              item.site === "YouTube" &&
+              item.type === "Trailer" &&
+              item.name === "Official Trailer"
+            );
+          }) ||
+          details.videos.results.find((item) => {
+            return item.site === "YouTube" && item.type === "Trailer";
+          }) ||
+          details.videos.results.find((item) => {
+            return (
+              item.site === "YouTube" &&
+              item.type === "Teaser" &&
+              item.name === true
+            );
+          }) ||
+          details.videos.results.find((item) => {
+            return item.site === "YouTube" && item.type === "Teaser";
+          }) ||
+          details.videos.results.find((item) => {
+            return item.site === "YouTube" && item.type === "Behind the Scenes";
+          }) ||
+          details.videos.results.find((item) => {
+            return item.site === "YouTube";
+          });
 
         if (trailer) {
           setShowTrailer(`https://www.youtube.com/embed/${trailer.key}`);
         }
         console.log("ShowTrailer: ", trailer);
+        console.log(
+          "Similar: ",
+          processData(details.similar.results, showType),
+        );
+        setSimilarShows(processData(details.similar.results, showType));
         setShowCast(details.credits.cast);
         setShowDetails(details);
       } catch (error) {
@@ -76,9 +103,9 @@ function Details() {
         title={showDetails?.title || showDetails?.name}
       >
         <article className="flex flex-col md:flex-row relative z-10 items-end justify-end flex-1 gap-4 px-4">
-          <picture className="hidden md:flex rounded-md ">
+          <picture className="hidden md:flex rounded-md h-[300px] w-[200px] shrink-0">
             <img
-              className="rounded-md "
+              className="rounded-md aspect-2/3"
               src={`https://image.tmdb.org/t/p/w500/${showDetails?.poster_path}`}
               alt={showDetails?.title || showDetails?.name}
             />
@@ -121,7 +148,7 @@ function Details() {
       <section className="bg-surface flex border-b border-border">
         {tabs.map((item) => (
           <Link
-            onClick={() => setSearchParams({ tab: item })}
+            onClick={() => setSearchParams({ tab: item }, { replace: true })}
             className={`flex-1 py-3 flex text-sm items-center justify-center ${activeTab === item ? "border-b-brand border-b-3" : "border-b-0"}`}
           >
             {item}
@@ -139,6 +166,9 @@ function Details() {
       )}
       {activeTab === "Cast" && (
         <MovieList category={showCast} children={<p>{showCast.name}</p>} />
+      )}
+      {activeTab === "Similar" && (
+        <MovieList category={similarShows} title={"Similar Shows"} />
       )}
     </main>
   );

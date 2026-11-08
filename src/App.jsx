@@ -4,8 +4,6 @@ import Details from "./components/pages/details";
 import Header from "./components/layout/header";
 import Sidebar from "./components/layout/sidebar";
 import Footer from "./components/layout/footer";
-import SignIn from "./components/pages/authentication/signin";
-import SignUp from "./components/pages/authentication/signup";
 import MyList from "./components/pages/myList";
 import { AppProvider, AppContext } from "./context/AppContext";
 import { supabase } from "./lib/supabaseClient";
@@ -13,6 +11,7 @@ import { useContext, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import HeroLoading from "./components/loadingStates/heroLoading";
 import TvShows from "./components/pages/tvShows";
+import AuthPage from "./components/pages/authentication/authPage";
 
 function AppContent() {
   const { isSignedIn, setIsSignedIn } = useContext(AppContext);
@@ -49,8 +48,8 @@ function AppContent() {
             <Route path="/movies" element={<Movies />} />
             <Route path="/tv-shows" element={<TvShows />} />
             <Route path="/details/:showType/:id" element={<Details />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Route path="/signin" element={<AuthPage />} />
+            <Route path="/signup" element={<AuthPage />} />
             <Route path="/my-list" element={<MyList />} />
             <Route path="/hero-loading" element={<HeroLoading />} />
           </Routes>

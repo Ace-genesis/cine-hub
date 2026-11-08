@@ -25,6 +25,10 @@
   --color-warning: #f6b84a;
   --color-error: #ff5a67;
   --color-info: #4da3ff;
+  --color-focus: #4da3ff;
+
+  --color-error-bg: rgb(255 90 103 / 12%);
+  --color-error-border: rgb(255 90 103 / 30%);
 
   --text-fluid-sm: clamp(0.875rem, 0.8vw + 0.7rem, 1rem);
   --text-fluid-base: clamp(1rem, 0.5vw + 0.9rem, 1.125rem);
@@ -120,28 +124,18 @@
   --info-bg: rgb(77 163 255 / 12%);
   --info-border: rgb(77 163 255 / 30%);
 
-  /* Layout */
-  --container-max: 1440px;
-  --page-gutter: 24px;
-
-  /* Fluid spacing */
-  --space-fluid-sm: clamp(8px, 1vw, 16px);
-  --space-fluid-md: clamp(0.5rem, 1vw, 2rem);
-  --space-fluid-lg: clamp(16px, 3vw, 48px);
-
-  /* Fluid typography */
-  --text-fluid-sm: clamp(0.7rem, 1vw, 1rem);
-  --text-fluid-base: clamp(1.2rem, 2.5vw, 2rem);
-  --text-fluid-lg: clamp(2.5rem, 2vw, 5rem);
-
-  --page-gutter-fluid: clamp(16px, 3vw, 40px);
-
-  /* Effects */
-  --transition-fast: 150ms ease;
-  --transition-normal: 250ms ease;
-
   /* Interactive states */
   --disabled-opacity: 0.5;
   --focus-color: #4da3ff;
   --focus-ring: 0 0 0 3px rgb(77 163 255 / 20%);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-elevated) inset !important;
+  -webkit-text-fill-color: var(--color-primary) !important;
+  caret-color: var(--color-primary);
+  transition: background-color 9999s ease-in-out 0s;
 }
